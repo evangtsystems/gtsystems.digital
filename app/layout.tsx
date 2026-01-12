@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Nav from "../components/nav";
 import Footer from "../components/footer";
 import { site } from "@/lib/site";
+import Script from "next/script";
+
 
 export const metadata: Metadata = {
   metadataBase: new URL(`https://${site.domain}`),
@@ -16,6 +18,23 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+
+      <Script
+  src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+  strategy="afterInteractive"
+/>
+
+<Script id="ga4-init" strategy="afterInteractive">
+  {`
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
+      page_path: window.location.pathname,
+    });
+  `}
+</Script>
+
       <body
         style={{
           margin: 0,
