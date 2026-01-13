@@ -76,6 +76,10 @@ const footerLinkExternal: React.CSSProperties = {
 <div>
   <FooterTitle>Categories</FooterTitle>
 
+  <FooterLink href="/kataskevi-istoselidon-kerkyra">
+    Κατασκευή Ιστοσελίδων Κέρκυρα
+  </FooterLink>
+
   <FooterExternalLink href="https://gtsystems.gr/company/">
     Company
   </FooterExternalLink>
@@ -88,6 +92,7 @@ const footerLinkExternal: React.CSSProperties = {
     Contact Us
   </FooterExternalLink>
 </div>
+
 
 
         {/* SERVICES */}
