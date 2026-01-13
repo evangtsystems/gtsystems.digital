@@ -4,7 +4,6 @@ import Footer from "../components/footer";
 import { site } from "@/lib/site";
 import Script from "next/script";
 
-
 export const metadata: Metadata = {
   metadataBase: new URL(`https://${site.domain}`),
   title: {
@@ -18,22 +17,61 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        {/* GA4 */}
+        {process.env.NEXT_PUBLIC_GA_ID ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
+                  page_path: window.location.pathname,
+                });
+              `}
+            </Script>
+          </>
+        ) : null}
 
-      <Script
-  src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-  strategy="afterInteractive"
-/>
-
-<Script id="ga4-init" strategy="afterInteractive">
-  {`
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
-      page_path: window.location.pathname,
-    });
-  `}
-</Script>
+        {/* LocalBusiness Schema */}
+        <Script
+          id="local-business-schema"
+          type="application/ld+json"
+          strategy="afterInteractive"
+        >
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              "name": "GT Systems Digital",
+              "url": "https://digital.gtsystems.gr",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Corfu",
+                "addressCountry": "GR"
+              },
+              "areaServed": {
+                "@type": "AdministrativeArea",
+                "name": "Κέρκυρα"
+              },
+              "telephone": "+302661700610",
+              "sameAs": [
+                "https://www.facebook.com/gtsystemsgr",
+                "https://www.linkedin.com/company/gtsystems/"
+              ],
+              "serviceOffered": {
+                "@type": "Service",
+                "name": "Κατασκευή Ιστοσελίδων στην Κέρκυρα"
+              }
+            }
+          `}
+        </Script>
+      </head>
 
       <body
         style={{
