@@ -109,7 +109,7 @@ export default function EnglishHomePage() {
               <span>years supporting local businesses</span>
             </div>
             <div className="hero-panel__stat">
-              <span className="hero-panel__number">1</span>
+              <span className="hero-panel__number">5+</span>
               <span>partner for software, hardware, networks, and support</span>
             </div>
             <div className="hero-panel__stat">

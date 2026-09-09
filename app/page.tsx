@@ -39,7 +39,7 @@ export default function HomePage() {
               <span>χρόνια υποστήριξης τοπικών επιχειρήσεων</span>
             </div>
             <div className="hero-panel__stat">
-              <span className="hero-panel__number">1</span>
+              <span className="hero-panel__number">5+</span>
               <span>συνεργάτης για λογισμικό, εξοπλισμό, δίκτυα και υποστήριξη</span>
             </div>
             <div className="hero-panel__stat">
