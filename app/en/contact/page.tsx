@@ -9,11 +9,12 @@ export const metadata: Metadata = {
 export default async function EnglishContactPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ sent?: string; error?: string }>;
+  searchParams?: Promise<{ sent?: string; error?: string; emailError?: string }>;
 }) {
   const params = await searchParams;
   const sent = params?.sent === "1";
   const error = params?.error === "1";
+  const emailError = params?.emailError === "1";
 
   return (
     <>
@@ -57,6 +58,12 @@ export default async function EnglishContactPage({
             {error ? (
               <div className="contact-card" style={{ padding: 14, borderColor: "#b54747" }}>
                 Please add your name, a valid email, and a short message.
+              </div>
+            ) : null}
+            {emailError ? (
+              <div className="contact-card" style={{ padding: 14, borderColor: "#b54747" }}>
+                Your message could not be sent because of a temporary email problem. Please try
+                again or contact us directly at {site.email}.
               </div>
             ) : null}
             <input className="field" name="name" placeholder="Name" required />

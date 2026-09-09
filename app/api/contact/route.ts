@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     await sendContactEmail(payload);
   } catch (error) {
     console.error("[CONTACT_EMAIL_ERROR]", error);
-    return NextResponse.redirect(redirectUrl(req, `${contactPath}?error=1`), 303);
+    return NextResponse.redirect(redirectUrl(req, `${contactPath}?emailError=1`), 303);
   }
 
   return NextResponse.redirect(redirectUrl(req, `${contactPath}?sent=1`), 303);
