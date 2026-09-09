@@ -1,38 +1,56 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Section from "@/components/section";
 
 export const metadata: Metadata = {
-  title: "Web Apps",
-  description: "Custom web applications: dashboards, portals, admin panels, and internal tools.",
+  title: "Υπηρεσίες Τεχνικής Υποστήριξης",
+  description:
+    "Service υπολογιστών και laptop, συμβόλαια υποστήριξης, απομακρυσμένη βοήθεια, προμήθεια εξοπλισμού και επιχειρησιακή τεχνική υποστήριξη.",
 };
 
-export default function WebAppsPage() {
+export default function SupportPage() {
   return (
     <>
-      <section style={{ padding: "54px 16px 20px" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <h1 style={{ margin: 0, fontSize: 44, lineHeight: 1.1 }}>Custom Web Applications</h1>
-          <p style={{ margin: "12px 0 0", maxWidth: 860, color: "rgba(245,245,245,0.85)", fontSize: 18, lineHeight: 1.7 }}>
-            When a website isn’t enough, we build systems: dashboards, portals, admin panels and tools that save time.
+      <section className="page-hero">
+        <div className="container">
+          <p className="eyebrow">Υπηρεσίες Υποστήριξης</p>
+          <h1>Πρακτική τεχνική υποστήριξη για τα συστήματα που χρησιμοποιεί καθημερινά η ομάδα σας.</h1>
+          <p>
+            Η GTSystems υποστηρίζει υπολογιστές, laptop, λογισμικό, δίκτυα και συνδεδεμένα
+            επιχειρησιακά εργαλεία, ώστε η ομάδα σας να συνεχίζει να εργάζεται με λιγότερες
+            διακοπές και ξεκάθαρη ευθύνη.
           </p>
         </div>
       </section>
 
-      <Section eyebrow="Use cases" title="Built for real workflows">
-        <ul style={{ margin: 0, paddingLeft: 18 }}>
-          <li>Admin dashboards & reporting</li>
-          <li>Client portals & self-service</li>
-          <li>Booking/ordering flows</li>
-          <li>Internal tools & automation</li>
-        </ul>
+      <section className="page-content">
+        <div className="container two-column">
+          <div>
+            <h2>Υποστήριξη που καταλαβαίνει το επιχειρησιακό πλαίσιο</h2>
+            <p>
+              Η σωστή υποστήριξη δεν είναι μόνο η επισκευή μιας συσκευής. Είναι η κατανόηση του
+              τι προσπαθούν να πετύχουν μαζί η συσκευή, το λογισμικό, το δίκτυο και ο χρήστης.
+            </p>
+            <ul className="check-list">
+              <li>Συμβόλαια υποστήριξης και προγραμματισμένη συντήρηση</li>
+              <li>Service υπολογιστών και laptop</li>
+              <li>Πώληση και εγκατάσταση εξοπλισμού</li>
+              <li>Απομακρυσμένη βοήθεια και επίλυση προβλημάτων</li>
+              <li>Βελτιώσεις ασφάλειας και αξιοπιστίας</li>
+            </ul>
+          </div>
 
-        <div style={{ marginTop: 18 }}>
-          <Link href="/contact" style={{ textDecoration: "none", fontWeight: 900, color: "#d1b76e" }}>
-            Tell us what you need →
-          </Link>
+          <aside className="contact-card">
+            <h2>Χρειάζεστε βοήθεια τώρα;</h2>
+            <p>
+              Επικοινωνήστε με την GTSystems για το σύστημα, τη συσκευή ή τη ροή εργασίας που
+              μπλοκάρει την ομάδα σας και θα καθοδηγήσουμε το επόμενο βήμα.
+            </p>
+            <Link className="button" href="/contact">
+              Ζητήστε υποστήριξη
+            </Link>
+          </aside>
         </div>
-      </Section>
+      </section>
     </>
   );
 }

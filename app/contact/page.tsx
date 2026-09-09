@@ -1,61 +1,85 @@
-export default function ContactPage() {
+import type { Metadata } from "next";
+import { site } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Επικοινωνία",
+  description: "Επικοινωνήστε με την GTSystems στην Κέρκυρα για υπηρεσίες πληροφορικής, εμπορικό λογισμικό, υποστήριξη, δίκτυα, POS συστήματα και ιστοσελίδες.",
+};
+
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ sent?: string; error?: string }>;
+}) {
+  const params = await searchParams;
+  const sent = params?.sent === "1";
+  const error = params?.error === "1";
+
   return (
-    <section style={{ padding: "54px 16px 60px" }}>
-      <div style={{ maxWidth: 760, margin: "0 auto" }}>
-        <h1 style={{ margin: 0, fontSize: 44, lineHeight: 1.1 }}>Contact</h1>
-        <p style={{ margin: "12px 0 0", color: "rgba(245,245,245,0.85)", fontSize: 18, lineHeight: 1.7 }}>
-          Tell us what you want to build. We’ll respond with next steps and an estimate.
-        </p>
+    <>
+      <section className="page-hero">
+        <div className="container">
+          <p className="eyebrow">Επικοινωνία</p>
+          <h1>Πείτε μας τι χρειάζεται να διορθώσετε, να βελτιώσετε ή να δημιουργήσετε.</h1>
+          <p>
+            Στείλτε μας λίγες πληροφορίες και η GTSystems θα επικοινωνήσει μαζί σας με πρακτικά
+            επόμενα βήματα για λογισμικό, υποστήριξη, δίκτυο, POS, ιστοσελίδα ή αυτοματισμό.
+          </p>
+        </div>
+      </section>
 
-        <form
-          action="/api/contact"
-          method="post"
-          style={{
-            marginTop: 18,
-            display: "grid",
-            gap: 12,
-            padding: 16,
-            borderRadius: 16,
-            border: "1px solid rgba(209,183,110,0.18)",
-            background: "rgba(7, 8, 21, 0.55)",
-          }}
-        >
-          <input name="name" placeholder="Name" required style={inputStyle} />
-          <input name="company" placeholder="Company (optional)" style={inputStyle} />
-          <input name="email" placeholder="Email" type="email" required style={inputStyle} />
-          <input name="phone" placeholder="Phone (optional)" style={inputStyle} />
-          <textarea name="message" placeholder="What do you need?" required rows={6} style={inputStyle} />
+      <section className="page-content">
+        <div className="container contact-grid">
+          <aside className="contact-card">
+            <h2>GTSystems</h2>
+            <p>
+              {site.address}
+              <br />
+              {site.hours}
+            </p>
+            <p>
+              <a href={`tel:${site.phone.replaceAll(" ", "")}`}>{site.phone}</a>
+              <br />
+              <a href={`tel:${site.mobile.replaceAll(" ", "")}`}>{site.mobile}</a>
+              <br />
+              <a href={`mailto:${site.email}`}>{site.email}</a>
+            </p>
+            <p>Αρ. ΓΕΜΗ: {site.registryNumber}</p>
+          </aside>
 
-          <button
-            type="submit"
-            style={{
-              cursor: "pointer",
-              fontWeight: 900,
-              padding: "12px 16px",
-              borderRadius: 14,
-              border: "none",
-              background: "linear-gradient(180deg, rgba(209,183,110,0.95), rgba(209,183,110,0.75))",
-              color: "#070815",
-            }}
-          >
-            Send
-          </button>
-
-          <div style={{ color: "rgba(245,245,245,0.65)", fontSize: 13 }}>
-            This form posts to a Next.js Node route: <code>/api/contact</code>.
-          </div>
-        </form>
-      </div>
-    </section>
+          <form className="form-card form-grid" action="/api/contact" method="post">
+            {sent ? (
+              <div className="contact-card" style={{ padding: 14, borderColor: "#8fa341" }}>
+                Ευχαριστούμε. Το αίτημά σας στάλθηκε και η GTSystems θα επικοινωνήσει μαζί σας.
+              </div>
+            ) : null}
+            {error ? (
+              <div className="contact-card" style={{ padding: 14, borderColor: "#b54747" }}>
+                Συμπληρώστε όνομα, έγκυρο email και ένα σύντομο μήνυμα.
+              </div>
+            ) : null}
+            <input className="field" name="name" placeholder="Ονοματεπώνυμο" required />
+            <input className="field" name="company" placeholder="Εταιρεία" />
+            <input className="field" name="email" placeholder="Email" type="email" required />
+            <input className="field" name="phone" placeholder="Τηλέφωνο" />
+            <select className="field" name="topic" defaultValue="">
+              <option value="" disabled>
+                Τι αφορά το αίτημα;
+              </option>
+              <option>Εμπορικό λογισμικό</option>
+              <option>Ταμειακό ή POS σύστημα</option>
+              <option>Τεχνική υποστήριξη</option>
+              <option>Δίκτυο ή τηλεπικοινωνίες</option>
+              <option>Ιστοσελίδα ή web app</option>
+              <option>Άλλο</option>
+            </select>
+            <textarea className="field" name="message" placeholder="Περιγράψτε σύντομα τι χρειάζεστε" required />
+            <button className="button" type="submit">
+              Αποστολή αιτήματος
+            </button>
+          </form>
+        </div>
+      </section>
+    </>
   );
 }
-
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "12px 12px",
-  borderRadius: 12,
-  border: "1px solid rgba(245,245,245,0.14)",
-  background: "rgba(0,0,0,0.25)",
-  color: "#f5f5f5",
-  outline: "none",
-};

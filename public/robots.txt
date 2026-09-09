@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://digital.gtsystems.gr/sitemap.xml
+Sitemap: https://gtsystems.gr/sitemap.xml

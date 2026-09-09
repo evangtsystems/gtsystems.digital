@@ -1,62 +1,85 @@
-import Link from "next/link";
+"use client";
 
-const linkStyle: React.CSSProperties = {
-  color: "#f5f5f5",
-  textDecoration: "none",
-  fontWeight: 700,
-  padding: "10px 12px",
-  borderRadius: 12,
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { site } from "@/lib/site";
+
+const navItems = {
+  el: [
+    { label: "Αρχική", href: "/" },
+    { label: "Λύσεις", href: "/business-systems" },
+    { label: "Web & Apps", href: "/web-development" },
+    { label: "Υποστήριξη", href: "/web-apps" },
+    { label: "Εταιρεία", href: "/company" },
+  ],
+  en: [
+    { label: "Home", href: "/en" },
+    { label: "Solutions", href: "/en/business-systems" },
+    { label: "Web & Apps", href: "/en/web-development" },
+    { label: "Support", href: "/en/web-apps" },
+    { label: "Company", href: "/en/company" },
+  ],
 };
 
 export default function Nav() {
-  return (
-    <header
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 50,
-        background: "rgba(7, 8, 21, 0.85)",
-        backdropFilter: "blur(10px)",
-        borderBottom: "1px solid rgba(209, 183, 110, 0.18)",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1100,
-          margin: "0 auto",
-          padding: "14px 16px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 12,
-        }}
-      >
-        <Link href="/" style={{ ...linkStyle, padding: 0, fontSize: 16 }}>
-          <span style={{ color: "#d1b76e" }}>GTSystems</span> Digital
-        </Link>
+  const pathname = usePathname();
+  const isEnglish = pathname.startsWith("/en");
+  const languageHref = isEnglish ? pathname.replace(/^\/en/, "") || "/" : `/en${pathname === "/" ? "" : pathname}`;
+  const languageLabel = isEnglish ? "EL" : "EN";
+  const contactHref = isEnglish ? "/en/contact" : "/contact";
+  const items = isEnglish ? navItems.en : navItems.el;
+  const place = isEnglish ? "Corfu, Greece" : `${site.city}, ${site.country}`;
+  const hours = isEnglish ? "Mon - Fri: 9.00 - 17.00" : site.hours;
 
-        <nav style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
-          <Link href="/web-development" style={linkStyle}>
-            Web Development
+  return (
+    <>
+      <header className="topbar">
+        <div className="container topbar__inner">
+          <Link href={isEnglish ? "/en" : "/"} className="brand-link" aria-label={isEnglish ? "GTSystems home" : "Αρχική σελίδα GTSystems"}>
+            <Image
+              src={site.logoBlack}
+              alt="GTSystems I.T. Business Solutions"
+              width={300}
+              height={82}
+              priority
+              unoptimized
+            />
           </Link>
-          <Link href="/web-apps" style={linkStyle}>
-            Web Apps
-          </Link>
-          <Link href="/business-systems" style={linkStyle}>
-            Business Systems
-          </Link>
-          <Link
-            href="/contact"
-            style={{
-              ...linkStyle,
-              background: "linear-gradient(180deg, rgba(209,183,110,0.95), rgba(209,183,110,0.75))",
-              color: "#070815",
-            }}
-          >
-            Contact
-          </Link>
-        </nav>
-      </div>
-    </header>
+
+          <div className="topbar__meta" aria-label={isEnglish ? "Business contact details" : "Στοιχεία επικοινωνίας επιχείρησης"}>
+            <span>{place}</span>
+            <span>{hours}</span>
+            <a href={`tel:${site.phone.replaceAll(" ", "")}`}>
+              <strong>{site.phone}</strong>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <nav className="nav" aria-label={isEnglish ? "Primary navigation" : "Κύρια πλοήγηση"}>
+        <div className="container nav__inner">
+          <div className="nav__links">
+            {items.map((item) => (
+              <Link className="nav__link" href={item.href} key={item.href}>
+                {item.label}
+              </Link>
+            ))}
+          </div>
+          <div className="nav__actions">
+            <Link
+              className="language-switch"
+              href={languageHref}
+              aria-label={isEnglish ? "Switch to Greek" : "Switch to English"}
+            >
+              <span>{languageLabel}</span>
+            </Link>
+            <Link className="nav__cta" href={contactHref}>
+              {isEnglish ? "Contact Us" : "Επικοινωνία"}
+            </Link>
+          </div>
+        </div>
+      </nav>
+    </>
   );
 }

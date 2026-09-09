@@ -1,100 +1,220 @@
+import Image from "next/image";
 import Link from "next/link";
-import Section from "@/components/section";
+import { providers, services, websiteProjects } from "@/lib/site";
+
+const process = [
+  ["Ανάλυση", "Καταγράφουμε την ανάγκη, τα υπάρχοντα εργαλεία, τους κινδύνους και το αποτέλεσμα που θέλετε."],
+  ["Σχεδιασμός", "Επιλέγουμε τον σωστό συνδυασμό λογισμικού, εξοπλισμού, δικτύου, υποστήριξης και web συστημάτων."],
+  ["Υλοποίηση", "Ρυθμίζουμε, εγκαθιστούμε, συνδέουμε, δοκιμάζουμε και εκπαιδεύουμε την ομάδα σας."],
+  ["Υποστήριξη", "Μένουμε δίπλα σας μετά την παράδοση με πρακτική, τοπική βοήθεια όταν χρειάζεται."],
+];
 
 export default function HomePage() {
   return (
     <>
-      <section style={{ padding: "64px 16px 46px" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ color: "#d1b76e", fontWeight: 900, letterSpacing: 0.3 }}>
-            Digital Agency • Web Development • Business Systems
+      <section className="hero">
+        <div className="container hero__inner">
+          <div>
+            <p className="eyebrow">Business IT · Megasoft · RBS · POS · Networks · Web</p>
+            <h1>Ο τεχνολογικός κορμός για επιχειρήσεις που κινούνται κάθε μέρα.</h1>
+            <p>
+              Η GTSystems συνδέει εμπορικό λογισμικό, RBS και POS ροές, ταμειακά συστήματα,
+              δίκτυα, τηλεπικοινωνίες, ασφάλεια, τεχνική υποστήριξη και web εφαρμογές σε ένα
+              λειτουργικό οικοσύστημα για την επιχείρησή σας.
+            </p>
+            <div className="hero__actions">
+              <Link className="button button--light" href="/contact">
+                Μιλήστε με την GTSystems
+              </Link>
+              <Link className="button button--ghost" href="/business-systems">
+                Δείτε τις λύσεις
+              </Link>
+            </div>
           </div>
 
-          <h1 style={{ margin: "12px 0 0", fontSize: 48, lineHeight: 1.05 }}>
-            Websites that run businesses — not just look good.
-          </h1>
+          <aside className="hero-panel" aria-label="GTSystems highlights">
+            <div className="hero-panel__label">Integrated business stack</div>
+            <div className="hero-panel__stat">
+              <span className="hero-panel__number">20+</span>
+              <span>χρόνια υποστήριξης τοπικών επιχειρήσεων</span>
+            </div>
+            <div className="hero-panel__stat">
+              <span className="hero-panel__number">1</span>
+              <span>συνεργάτης για λογισμικό, εξοπλισμό, δίκτυα και υποστήριξη</span>
+            </div>
+            <div className="hero-panel__stat">
+              <span className="hero-panel__number">GR</span>
+              <span>τεχνογνωσία ελληνικής αγοράς με εξυπηρέτηση από την Κέρκυρα</span>
+            </div>
+          </aside>
+        </div>
+      </section>
 
-          <p style={{ margin: "14px 0 0", maxWidth: 760, color: "rgba(245,245,245,0.85)", fontSize: 18, lineHeight: 1.7 }}>
-            We build fast, SEO-ready websites, custom web apps, and business systems that help SMEs grow.
-          </p>
+      <section className="provider-strip" aria-label="Πάροχοι και τεχνολογίες">
+        <div className="container provider-strip__inner">
+          {providers.map((provider) => (
+            <span key={provider.name}>{provider.name}</span>
+          ))}
+        </div>
+      </section>
 
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 18 }}>
-            <Link
-              href="/contact"
-              style={{
-                textDecoration: "none",
-                fontWeight: 900,
-                padding: "12px 16px",
-                borderRadius: 14,
-                background: "linear-gradient(180deg, rgba(209,183,110,0.95), rgba(209,183,110,0.75))",
-                color: "#070815",
-              }}
-            >
-              Get a Quote
-            </Link>
+      <section className="band band--white">
+        <div className="container">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Λύσεις</p>
+              <h2>Όλα όσα χρειάζεται μια επιχείρηση για να λειτουργεί, να συνδέεται και να μεγαλώνει.</h2>
+            </div>
+            <p>
+              Αντί για αποσπασματικά εργαλεία, συνδυάζουμε δοκιμασμένες πλατφόρμες, αξιόπιστη
+              υποδομή και συνεχή υποστήριξη γύρω από την πραγματική ροή εργασίας σας.
+            </p>
+          </div>
 
-            <Link
-              href="/web-development"
-              style={{
-                textDecoration: "none",
-                fontWeight: 900,
-                padding: "12px 16px",
-                borderRadius: 14,
-                border: "1px solid rgba(209,183,110,0.35)",
-                color: "#f5f5f5",
-              }}
-            >
-              Web Development
+          <div className="service-grid">
+            {services.map((service) => (
+              <article className="service-card" key={service.title}>
+                <div className="service-card__image">
+                  <Image src={service.image} alt="" fill sizes="(max-width: 880px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+                </div>
+                <div className="service-card__body">
+                  <h3>{service.title}</h3>
+                  <p>{service.summary}</p>
+                  <ul>
+                    {service.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="band">
+        <div className="container split">
+          <div>
+            <p className="eyebrow">Γιατί GTSystems</p>
+            <h2>Λύσεις για επιχειρήσεις που δεν μπορούν να σταματήσουν μέχρι να λυθεί ένα τεχνικό θέμα.</h2>
+          </div>
+          <div>
+            <p>
+              Το λογιστικό πρόγραμμα, το POS, το δίκτυο, οι συσκευές, η ιστοσελίδα και το reporting
+              επηρεάζουν την ίδια καθημερινή λειτουργία. Βλέπουμε το σύνολο και φροντίζουμε τα
+              κομμάτια να δουλεύουν μαζί με ξεκάθαρη ευθύνη και αξιόπιστη υποστήριξη.
+            </p>
+            <div className="section-actions">
+              <Link className="button" href="/company">
+                Η εταιρεία
+              </Link>
+              <Link className="button button--outline" href="/contact">
+                Ζητήστε υποστήριξη
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="band band--white">
+        <div className="container">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Πάροχοι & προϊόντα</p>
+              <h2>Πραγματικά προϊόντα, σωστή παραμετροποίηση, υποστήριξη στην πράξη.</h2>
+            </div>
+            <p>
+              Η GTSystems δεν εμφανίζει απλώς λογότυπα. Επιλέγει, εγκαθιστά και υποστηρίζει
+              λύσεις που έχουν συγκεκριμένο ρόλο μέσα στην επιχείρηση: διαχείριση, ταμείο,
+              παραγγελιοληψία, ασφάλεια και απομακρυσμένη τεχνική βοήθεια.
+            </p>
+          </div>
+
+          <div className="provider-grid">
+            {providers.map((provider) => (
+              <a className="provider-card" href={provider.href} key={provider.name} target="_blank" rel="noopener noreferrer">
+                <span className="provider-card__media">
+                  <Image src={provider.image} alt="" fill sizes="(max-width: 880px) 100vw, 50vw" style={{ objectFit: "contain" }} />
+                </span>
+                <span className="provider-card__body">
+                  <span className="provider-card__category">{provider.category}</span>
+                  <span className="provider-card__title">
+                    <span>
+                      <small>{provider.name}</small>
+                      <strong>{provider.product}</strong>
+                    </span>
+                  </span>
+                  <span className="provider-card__tone">{provider.tone}</span>
+                  <span className="provider-card__description">{provider.description}</span>
+                  <span className="provider-card__bullets">
+                    {provider.bullets.map((bullet) => (
+                      <span key={bullet}>{bullet}</span>
+                    ))}
+                  </span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="band band--white">
+        <div className="container">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Portfolio ιστοσελίδων</p>
+              <h2>Digital έργα που ήδη εξυπηρετούν επιχειρήσεις της Κέρκυρας.</h2>
+            </div>
+            <p>
+              Ενδεικτικά έργα ιστοσελίδων της GTSystems σε φιλοξενία, λιανική, υπηρεσίες,
+              καταλύματα, εστίαση, τουρισμό και τοπική επιχειρηματικότητα.
+            </p>
+          </div>
+
+          <div className="portfolio-grid">
+            {websiteProjects.slice(0, 6).map((project) => (
+              <a className="portfolio-card" href={project.website} key={project.href} target="_blank" rel="noopener noreferrer">
+                <Image src={project.image} alt="" fill sizes="(max-width: 880px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+                <span className="portfolio-card__content">
+                  <span className="portfolio-card__tag">{project.category}</span>
+                  <h3>{project.title}</h3>
+                  <span className="portfolio-card__link">Επίσκεψη ιστοσελίδας</span>
+                </span>
+              </a>
+            ))}
+          </div>
+
+          <div className="section-actions">
+            <Link className="button button--outline" href="/web-development">
+              Δείτε περισσότερα έργα
             </Link>
           </div>
         </div>
       </section>
 
-      <Section eyebrow="What we do" title="A digital partner for business growth">
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12, marginTop: 14 }}>
-          {[
-            { t: "Business Websites", d: "Fast SSR sites focused on leads, bookings, and trust." },
-            { t: "Web Apps", d: "Dashboards, portals, admin panels — built for real workflows." },
-            { t: "Business Systems", d: "Automation, integrations, and system thinking from ERP world." },
-            { t: "Long-term Support", d: "We don’t disappear after launch. We iterate and improve." },
-          ].map((x) => (
-            <div
-              key={x.t}
-              style={{
-                padding: 16,
-                borderRadius: 16,
-                border: "1px solid rgba(209,183,110,0.18)",
-                background: "rgba(7, 8, 21, 0.55)",
-              }}
-            >
-              <div style={{ fontWeight: 900, color: "#f5f5f5" }}>{x.t}</div>
-              <div style={{ marginTop: 8, color: "rgba(245,245,245,0.82)" }}>{x.d}</div>
+      <section className="band band--dark">
+        <div className="container">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Πώς δουλεύουμε</p>
+              <h2>Πρακτική διαδρομή από το πρόβλημα στο λειτουργικό σύστημα.</h2>
             </div>
-          ))}
-        </div>
-      </Section>
+            <p>
+              Αναβάθμιση, εγκατάσταση, διασύνδεση και υποστήριξη ακολουθούν την ίδια αρχή:
+              πρώτα καταλαβαίνουμε τη λειτουργία, μετά κάνουμε την τεχνολογία να την υπηρετεί.
+            </p>
+          </div>
 
-      <Section eyebrow="Next step" title="Tell us what you want to build">
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 14 }}>
-          <Link
-            href="/contact"
-            style={{
-              textDecoration: "none",
-              fontWeight: 900,
-              padding: "12px 16px",
-              borderRadius: 14,
-              background: "rgba(245,245,245,0.08)",
-              border: "1px solid rgba(209,183,110,0.25)",
-              color: "#f5f5f5",
-            }}
-          >
-            Contact
-          </Link>
-          <Link href="/web-apps" style={{ textDecoration: "none", fontWeight: 900, color: "#d1b76e" }}>
-            Explore Web Apps →
-          </Link>
+          <div className="process">
+            {process.map(([title, text]) => (
+              <div className="process__item" key={title}>
+                <strong>{title}</strong>
+                <span>{text}</span>
+              </div>
+            ))}
+          </div>
         </div>
-      </Section>
+      </section>
     </>
   );
 }
