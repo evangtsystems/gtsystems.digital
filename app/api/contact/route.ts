@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 
 export const runtime = "nodejs";
 const contactRecipient = "evangelos.lampos@gtsystems.gr";
+const brevoEndpoint = "https://api.brevo.com/v3/smtp/email";
 
 const maxLengths = {
   name: 120,
@@ -53,34 +53,46 @@ type ContactPayload = {
 };
 
 async function sendContactEmail(payload: ContactPayload) {
-  const host = process.env.SMTP_HOST;
-  const port = Number(process.env.SMTP_PORT ?? 587);
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  const from = process.env.SMTP_FROM ?? user;
+  const apiKey = process.env.BREVO_API_KEY;
+  const senderEmail = process.env.BREVO_SENDER_EMAIL ?? "info@gtsystems.gr";
+  const senderName = process.env.BREVO_SENDER_NAME ?? "GTSystems";
 
-  if (!host || !user || !pass || !from) {
-    throw new Error("Missing SMTP configuration. Set SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, and SMTP_FROM.");
+  if (!apiKey) {
+    throw new Error("Missing Brevo configuration. Set BREVO_API_KEY.");
   }
 
-  const transporter = nodemailer.createTransport({
-    host,
-    port,
-    secure: port === 465,
-    auth: { user, pass },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
+  const response = await fetch(brevoEndpoint, {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "api-key": apiKey,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      sender: {
+        name: senderName,
+        email: senderEmail,
+      },
+      to: [
+        {
+          email: contactRecipient,
+          name: "Evangelos Lampos",
+        },
+      ],
+      replyTo: {
+        email: payload.email,
+        name: payload.name,
+      },
+      subject: `New GTSystems contact request from ${payload.name}`,
+      textContent: contactEmailText(payload),
+      htmlContent: contactEmailHtml(payload),
+    }),
   });
 
-  await transporter.sendMail({
-    from,
-    to: contactRecipient,
-    replyTo: payload.email,
-    subject: `New GTSystems contact request from ${payload.name}`,
-    text: contactEmailText(payload),
-    html: contactEmailHtml(payload),
-  });
+  if (!response.ok) {
+    const responseBody = await response.text();
+    throw new Error(`Brevo email send failed with ${response.status}: ${responseBody}`);
+  }
 }
 
 function contactEmailText(payload: ContactPayload) {

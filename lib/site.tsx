@@ -1,7 +1,7 @@
 export const site = {
   name: "GTSystems",
   legalName: "GTSystems I.T. Business Solutions",
-  domain: "gtsystems.gr",
+  domain: "digital.gtsystems.gr",
   city: "Κέρκυρα",
   country: "Ελλάδα",
   address: "Κέρκυρα, Ελλάδα",

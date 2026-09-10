@@ -18,16 +18,16 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Contact Form Email
 
-The contact form sends messages to `evangelos.lampos@gtsystems.gr` through SMTP.
+The contact form sends messages to `evangelos.lampos@gtsystems.gr` through the Brevo Transactional Email API.
 Set these environment variables in production:
 
 ```bash
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=info@gtsystems.gr
-SMTP_PASS=your-smtp-password
-SMTP_FROM="GTSystems <info@gtsystems.gr>"
+BREVO_API_KEY=xkeysib-your-api-key
+BREVO_SENDER_EMAIL=info@gtsystems.gr
+BREVO_SENDER_NAME=GTSystems
 ```
+
+`BREVO_SENDER_EMAIL` must be a sender/domain verified inside Brevo.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
