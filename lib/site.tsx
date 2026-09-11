@@ -64,8 +64,30 @@ export const services = [
 ];
 
 export const partnerLinks = [
-  { label: "AnyDesk", href: "https://get.anydesk.com/" },
   { label: "Bitdefender GravityZone", href: "https://cloudgz.gravityzone.bitdefender.com/" },
+];
+
+export const supplierLogos = [
+  {
+    name: "Megasoft",
+    logo: "https://gtsystems.gr/wp-content/uploads/2021/09/megasoft.webp",
+  },
+  {
+    name: "RBS",
+    logo: "https://gtsystems.gr/wp-content/uploads/2021/09/rbs-1.webp",
+  },
+  {
+    name: "Ubiquiti Networks",
+    logo: "https://gtsystems.gr/wp-content/uploads/2021/09/ubiquiti.webp",
+  },
+  {
+    name: "MikroTik",
+    logo: "https://gtsystems.gr/wp-content/uploads/2021/09/mikrotik.webp",
+  },
+  {
+    name: "Cisco",
+    logo: "https://gtsystems.gr/wp-content/uploads/2021/09/cisco.webp",
+  },
 ];
 
 export const providers = [
@@ -104,18 +126,6 @@ export const providers = [
     description:
       "Το GravityZone φέρνει προστασία endpoint, πρόληψη απειλών και κεντρική εικόνα ασφάλειας για συσκευές, δίκτυα και cloud υπηρεσίες.",
     bullets: ["Business Security", "Threat prevention", "Endpoint visibility"],
-  },
-  {
-    name: "AnyDesk",
-    category: "Remote support",
-    product: "Remote Support",
-    href: "https://anydesk.com/en",
-    image: "https://gtsystems.gr/wp-content/uploads/2019/01/support-600x389.jpg",
-    logo: "",
-    tone: "Remote support, device access, help desk workflows",
-    description:
-      "Το AnyDesk υποστηρίζει γρήγορη απομακρυσμένη βοήθεια, πρόσβαση σε συσκευές, mobile support και workflows τεχνικής υποστήριξης.",
-    bullets: ["Remote Support", "Mobile device support", "Cloud ή on-premises"],
   },
 ];
 

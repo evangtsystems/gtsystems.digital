@@ -18,7 +18,7 @@ export default async function EnglishContactPage({
 
   return (
     <>
-      <section className="page-hero">
+      <section className="page-hero page-hero--contact">
         <div className="container">
           <p className="eyebrow">Contact</p>
           <h1>Tell us what you need to fix, improve, or build.</h1>
@@ -29,10 +29,14 @@ export default async function EnglishContactPage({
         </div>
       </section>
 
-      <section className="page-content">
+      <section className="page-content page-content--contact">
         <div className="container contact-grid">
           <aside className="contact-card">
+            <span className="contact-card__kicker">GTSystems Support Desk</span>
             <h2>GTSystems</h2>
+            <p className="contact-card__lead">
+              Talk to us about software, POS, networks, support, websites, and automation.
+            </p>
             <p>
               Corfu, Greece
               <br />
@@ -46,10 +50,19 @@ export default async function EnglishContactPage({
               <a href={`mailto:${site.email}`}>{site.email}</a>
             </p>
             <p>Business Registry No: {site.registryNumber}</p>
+            <div className="contact-card__badges" aria-label="Service details">
+              <span>Direct response</span>
+              <span>Service across Greece</span>
+              <span>Business IT since 2005</span>
+            </div>
           </aside>
 
           <form className="form-card form-grid" action="/api/contact" method="post">
             <input type="hidden" name="locale" value="en" />
+            <div className="form-card__header">
+              <span className="contact-card__kicker">Request form</span>
+              <h2>Send us your request</h2>
+            </div>
             {sent ? (
               <div className="contact-card" style={{ padding: 14, borderColor: "#8fa341" }}>
                 Thank you. Your request was sent and GTSystems will follow up.

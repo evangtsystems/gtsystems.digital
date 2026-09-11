@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { providers, websiteProjects } from "@/lib/site";
+import { providers, supplierLogos, websiteProjects } from "@/lib/site";
 
 const services = [
   {
@@ -67,17 +67,6 @@ const englishProviders = [
     image: providers[2].image,
     href: providers[2].href,
   },
-  {
-    name: "AnyDesk",
-    category: "Remote support",
-    product: "Remote Support",
-    tone: "Remote assistance, device access, help desk workflows",
-    description:
-      "AnyDesk supports fast remote assistance, device access, mobile support, and practical help desk workflows.",
-    bullets: ["Remote Support", "Mobile support", "Cloud or on-premises"],
-    image: providers[3].image,
-    href: providers[3].href,
-  },
 ];
 
 export default function EnglishHomePage() {
@@ -86,7 +75,7 @@ export default function EnglishHomePage() {
       <section className="hero">
         <div className="container hero__inner">
           <div>
-            <p className="eyebrow">Business IT · Megasoft · RBS · POS · Networks · Web</p>
+            <p className="eyebrow">Business IT · POS · Networks · Web</p>
             <h1>The technology backbone for businesses that move every day.</h1>
             <p>
               GTSystems connects business software, RBS and POS flows, cash systems, networks,
@@ -114,7 +103,7 @@ export default function EnglishHomePage() {
             </div>
             <div className="hero-panel__stat">
               <span className="hero-panel__number">GR</span>
-              <span>Greek-market know-how with Corfu-based service</span>
+              <span>Greek-market know-how with service across Greece</span>
             </div>
           </aside>
         </div>
@@ -122,9 +111,13 @@ export default function EnglishHomePage() {
 
       <section className="provider-strip" aria-label="Providers and technologies">
         <div className="container provider-strip__inner">
-          {englishProviders.map((provider) => (
-            <span key={provider.name}>{provider.name}</span>
-          ))}
+          <div className="supplier-marquee">
+            {[...supplierLogos, ...supplierLogos].map((supplier, index) => (
+              <span className="supplier-logo" key={`${supplier.name}-${index}`}>
+                <Image src={supplier.logo} alt={supplier.name} fill sizes="170px" style={{ objectFit: "contain" }} />
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 

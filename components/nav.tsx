@@ -61,7 +61,11 @@ export default function Nav() {
         <div className="container nav__inner">
           <div className="nav__links">
             {items.map((item) => (
-              <Link className="nav__link" href={item.href} key={item.href}>
+              <Link
+                className={`nav__link${pathname === item.href ? " nav__link--active" : ""}`}
+                href={item.href}
+                key={item.href}
+              >
                 {item.label}
               </Link>
             ))}

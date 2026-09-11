@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { providers, services, websiteProjects } from "@/lib/site";
+import { providers, services, supplierLogos, websiteProjects } from "@/lib/site";
 
 const process = [
   ["Ανάλυση", "Καταγράφουμε την ανάγκη, τα υπάρχοντα εργαλεία, τους κινδύνους και το αποτέλεσμα που θέλετε."],
@@ -15,7 +15,7 @@ export default function HomePage() {
       <section className="hero">
         <div className="container hero__inner">
           <div>
-            <p className="eyebrow">Business IT · Megasoft · RBS · POS · Networks · Web</p>
+            <p className="eyebrow">Business IT · POS · Networks · Web</p>
             <h1>Ο τεχνολογικός κορμός για επιχειρήσεις που κινούνται κάθε μέρα.</h1>
             <p>
               Η GTSystems συνδέει εμπορικό λογισμικό, RBS και POS ροές, ταμειακά συστήματα,
@@ -44,7 +44,7 @@ export default function HomePage() {
             </div>
             <div className="hero-panel__stat">
               <span className="hero-panel__number">GR</span>
-              <span>τεχνογνωσία ελληνικής αγοράς με εξυπηρέτηση από την Κέρκυρα</span>
+              <span>τεχνογνωσία ελληνικής αγοράς με εξυπηρέτηση σε όλη την Ελλάδα</span>
             </div>
           </aside>
         </div>
@@ -52,9 +52,13 @@ export default function HomePage() {
 
       <section className="provider-strip" aria-label="Πάροχοι και τεχνολογίες">
         <div className="container provider-strip__inner">
-          {providers.map((provider) => (
-            <span key={provider.name}>{provider.name}</span>
-          ))}
+          <div className="supplier-marquee">
+            {[...supplierLogos, ...supplierLogos].map((supplier, index) => (
+              <span className="supplier-logo" key={`${supplier.name}-${index}`}>
+                <Image src={supplier.logo} alt={supplier.name} fill sizes="170px" style={{ objectFit: "contain" }} />
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
