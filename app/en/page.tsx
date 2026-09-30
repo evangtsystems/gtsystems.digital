@@ -95,7 +95,7 @@ export default function EnglishHomePage() {
             <div className="hero-panel__label">Integrated business stack</div>
             <div className="hero-panel__stat">
               <span className="hero-panel__number">20+</span>
-              <span>years supporting local businesses</span>
+              <span>years supporting businesses across Greece</span>
             </div>
             <div className="hero-panel__stat">
               <span className="hero-panel__number">5+</span>

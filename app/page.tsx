@@ -36,7 +36,7 @@ export default function HomePage() {
             <div className="hero-panel__label">Integrated business stack</div>
             <div className="hero-panel__stat">
               <span className="hero-panel__number">20+</span>
-              <span>χρόνια υποστήριξης τοπικών επιχειρήσεων</span>
+              <span>χρόνια δίπλα στις επιχειρήσεις σε όλη την Ελλάδα</span>
             </div>
             <div className="hero-panel__stat">
               <span className="hero-panel__number">5+</span>
