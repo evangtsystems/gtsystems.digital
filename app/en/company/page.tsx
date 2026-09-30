@@ -40,18 +40,21 @@ export default function EnglishCompanyPage() {
             </div>
           </div>
           <aside className="contact-card">
-            <h2>Company Details</h2>
+            <h2>With you every step of the way</h2>
             <p>
-              <strong>{site.legalName}</strong>
+              <strong>20+ years of experience</strong>
               <br />
-              Corfu, Greece
-              <br />
-              Business Registry No: {site.registryNumber}
+              Practical IT solutions for your everyday business needs.
             </p>
             <p>
-              <a href={`tel:${site.phone.replaceAll(" ", "")}`}>{site.phone}</a>
+              <strong>Service across Greece</strong>
               <br />
-              <a href={`mailto:${site.email}`}>{site.email}</a>
+              One partner for software, hardware, networks, and web applications.
+            </p>
+            <p>
+              <strong>Ongoing support</strong>
+              <br />
+              From choosing and installing your systems to keeping them running every day.
             </p>
           </aside>
         </div>

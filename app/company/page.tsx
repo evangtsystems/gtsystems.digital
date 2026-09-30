@@ -44,18 +44,21 @@ export default function CompanyPage() {
           </div>
 
           <aside className="contact-card">
-            <h2>Στοιχεία Εταιρείας</h2>
+            <h2>Δίπλα σας σε κάθε βήμα</h2>
             <p>
-              <strong>{site.legalName}</strong>
+              <strong>20+ χρόνια εμπειρίας</strong>
               <br />
-              {site.address}
-              <br />
-              Αρ. ΓΕΜΗ: {site.registryNumber}
+              Πρακτικές λύσεις πληροφορικής για τις καθημερινές ανάγκες της επιχείρησής σας.
             </p>
             <p>
-              <a href={`tel:${site.phone.replaceAll(" ", "")}`}>{site.phone}</a>
+              <strong>Εξυπηρέτηση σε όλη την Ελλάδα</strong>
               <br />
-              <a href={`mailto:${site.email}`}>{site.email}</a>
+              Ένας συνεργάτης για λογισμικό, εξοπλισμό, δίκτυα και web εφαρμογές.
+            </p>
+            <p>
+              <strong>Συνεχής υποστήριξη</strong>
+              <br />
+              Από την επιλογή και την εγκατάσταση έως την καθημερινή λειτουργία των συστημάτων σας.
             </p>
           </aside>
         </div>
