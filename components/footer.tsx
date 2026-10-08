@@ -25,8 +25,8 @@ export default function Footer() {
           <Image src={site.logoWhite} alt="GTSystems" width={300} height={82} unoptimized />
           <p>
             {isEnglish
-              ? "Integrated IT, software, infrastructure, support, and digital solutions for businesses that need dependable local expertise."
-              : "Ολοκληρωμένες λύσεις πληροφορικής, λογισμικού, υποδομών, υποστήριξης και digital υπηρεσιών για επιχειρήσεις που χρειάζονται αξιόπιστη τοπική τεχνογνωσία."}
+              ? "Integrated IT, software, infrastructure, support, and digital solutions for businesses across Greece."
+              : "Ολοκληρωμένες λύσεις πληροφορικής, λογισμικού, υποδομών, υποστήριξης και digital υπηρεσιών για επιχειρήσεις σε όλη την Ελλάδα."}
           </p>
         </div>
 

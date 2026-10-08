@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { PortfolioFilter } from "@/app/components/portfolio-filter";
 import { websiteProjects } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -180,18 +181,7 @@ export default function EnglishWebDevelopmentPage() {
               restaurants, service companies, tourism projects, and local organizations.
             </p>
           </div>
-          <div className="portfolio-grid">
-            {websiteProjects.map((project) => (
-              <a className="portfolio-card" href={project.website} key={project.href} target="_blank" rel="noopener noreferrer">
-                <Image src={project.image} alt="" fill sizes="(max-width: 880px) 100vw, 33vw" style={{ objectFit: "cover" }} />
-                <span className="portfolio-card__content">
-                  <span className="portfolio-card__tag">{project.category}</span>
-                  <h3>{project.title}</h3>
-                  <span className="portfolio-card__link">Visit website</span>
-                </span>
-              </a>
-            ))}
-          </div>
+          <PortfolioFilter projects={websiteProjects} locale="en" />
         </div>
       </section>
     </>

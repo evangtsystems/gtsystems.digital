@@ -19,3 +19,4 @@
  GET /web-apps 200 in 43ms (compile: 26ms, render: 17ms)
  GET /company 200 in 18ms (compile: 3ms, render: 16ms)
  GET / 200 in 29ms (compile: 3ms, render: 27ms)
+ GET / 200 in 439ms (compile: 13ms, render: 426ms)

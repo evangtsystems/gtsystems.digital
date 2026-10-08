@@ -208,7 +208,11 @@ export default function EnglishHomePage() {
           <div className="portfolio-grid">
             {websiteProjects.slice(0, 6).map((project) => (
               <a className="portfolio-card" href={project.website} key={project.href} target="_blank" rel="noopener noreferrer">
-                <Image src={project.image} alt="" fill sizes="(max-width: 880px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+                {project.image ? (
+                  <Image src={project.image} alt="" fill sizes="(max-width: 880px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+                ) : (
+                  <span className="portfolio-card__placeholder" aria-hidden="true">{project.title.slice(0, 1)}</span>
+                )}
                 <span className="portfolio-card__content">
                   <span className="portfolio-card__tag">{project.category}</span>
                   <h3>{project.title}</h3>

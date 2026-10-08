@@ -610,6 +610,20 @@ img {
   transform: scale(1.04);
 }
 
+.portfolio-card__placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: rgba(255, 255, 255, 0.24);
+  background: radial-gradient(circle at 75% 25%, rgba(143, 163, 65, 0.34), transparent 46%), var(--charcoal);
+  font-size: clamp(72px, 12vw, 128px);
+  font-weight: 900;
+  line-height: 1.1;
+  text-align: center;
+}
+
 .portfolio-card__content {
   position: absolute;
   z-index: 1;
@@ -650,13 +664,28 @@ img {
   margin: 0 0 24px;
 }
 
-.portfolio-summary span {
+.portfolio-filter {
   padding: 8px 10px;
   border: 1px solid var(--line);
   background: var(--white);
   color: var(--muted);
+  font: inherit;
   font-size: 13px;
   font-weight: 800;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.portfolio-filter:hover,
+.portfolio-filter[aria-pressed="true"] {
+  border-color: var(--green);
+  background: var(--green);
+  color: var(--white);
+}
+
+.portfolio-filter:focus-visible {
+  outline: 3px solid var(--lime);
+  outline-offset: 2px;
 }
 
 .split {
