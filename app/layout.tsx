@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import Footer from "@/components/footer";
+import Chatbot from "@/components/chatbot";
 import Nav from "@/components/nav";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Nav />
           <main className="site-main">{children}</main>
           <Footer />
+          <Chatbot />
         </div>
 
         <Script

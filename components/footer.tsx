@@ -38,6 +38,9 @@ export default function Footer() {
           <Link href={isEnglish ? "/en/business-systems" : "/business-systems"}>
             {isEnglish ? "Solutions" : "Λύσεις"}
           </Link>
+          <Link href={isEnglish ? "/en/faq" : "/faq"}>
+            {isEnglish ? "Frequently Asked Questions" : "Συχνές ερωτήσεις"}
+          </Link>
           <Link href={isEnglish ? "/en/contact" : "/contact"}>
             {isEnglish ? "Contact Us" : "Επικοινωνία"}
           </Link>

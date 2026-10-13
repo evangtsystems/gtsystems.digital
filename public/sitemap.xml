@@ -33,6 +33,11 @@
   </url>
 
   <url>
+    <loc>https://digital.gtsystems.gr/faq</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://digital.gtsystems.gr/company</loc>
     <priority>0.8</priority>
   </url>
@@ -69,6 +74,11 @@
 
   <url>
     <loc>https://digital.gtsystems.gr/en/contact</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://digital.gtsystems.gr/en/faq</loc>
     <priority>0.7</priority>
   </url>
 
