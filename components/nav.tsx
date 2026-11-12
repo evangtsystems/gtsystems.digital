@@ -10,6 +10,7 @@ const navItems = {
     { label: "Αρχική", href: "/" },
     { label: "Λύσεις", href: "/business-systems" },
     { label: "Web & Apps", href: "/web-development" },
+    { label: "Portfolio", href: "/portfolio" },
     { label: "Υποστήριξη", href: "/web-apps" },
     { label: "Εταιρεία", href: "/company" },
   ],
@@ -17,12 +18,13 @@ const navItems = {
     { label: "Home", href: "/en" },
     { label: "Solutions", href: "/en/business-systems" },
     { label: "Web & Apps", href: "/en/web-development" },
+    { label: "Portfolio", href: "/en/portfolio" },
     { label: "Support", href: "/en/web-apps" },
     { label: "Company", href: "/en/company" },
   ],
 };
 
-export default function Nav() {
+export default function Nav({ excludeHome = false, intro = false }: { excludeHome?: boolean; intro?: boolean }) {
   const pathname = usePathname();
   const isEnglish = pathname.startsWith("/en");
   const languageHref = isEnglish ? pathname.replace(/^\/en/, "") || "/" : `/en${pathname === "/" ? "" : pathname}`;
@@ -32,9 +34,11 @@ export default function Nav() {
   const place = isEnglish ? "Corfu, Greece" : `${site.city}, ${site.country}`;
   const hours = isEnglish ? "Mon - Fri: 9.00 - 17.00" : site.hours;
 
+  if (excludeHome && (pathname === "/" || pathname === "/en")) return null;
+
   return (
     <>
-      <header className="topbar">
+      <header className="topbar" id={intro ? undefined : "site-navigation"}>
         <div className="container topbar__inner">
           <Link href={isEnglish ? "/en" : "/"} className="brand-link" aria-label={isEnglish ? "GTSystems home" : "Αρχική σελίδα GTSystems"}>
             <Image

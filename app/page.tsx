@@ -1,6 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { providers, services, supplierLogos, websiteProjects } from "@/lib/site";
+import Nav from "@/components/nav";
+import IntroStory from "@/components/intro-story";
+import { Orbit, ProjectShowcase } from "@/components/experience";
+import { providers, services, supplierLogos } from "@/lib/site";
 
 const process = [
   ["Ανάλυση", "Καταγράφουμε την ανάγκη, τα υπάρχοντα εργαλεία, τους κινδύνους και το αποτέλεσμα που θέλετε."],
@@ -12,42 +15,12 @@ const process = [
 export default function HomePage() {
   return (
     <>
-      <section className="hero">
-        <div className="container hero__inner">
-          <div>
-            <p className="eyebrow">Business IT · POS · Networks · Web</p>
-            <h1>Ο τεχνολογικός κορμός για επιχειρήσεις που κινούνται κάθε μέρα.</h1>
-            <p>
-              Η GTSystems συνδέει εμπορικό λογισμικό, RBS και POS ροές, ταμειακά συστήματα,
-              δίκτυα, τηλεπικοινωνίες, ασφάλεια, τεχνική υποστήριξη και web εφαρμογές σε ένα
-              λειτουργικό οικοσύστημα για την επιχείρησή σας.
-            </p>
-            <div className="hero__actions">
-              <Link className="button button--light" href="/contact">
-                Μιλήστε με την GTSystems
-              </Link>
-              <Link className="button button--ghost" href="/business-systems">
-                Δείτε τις λύσεις
-              </Link>
-            </div>
-          </div>
+      <IntroStory />
 
-          <aside className="hero-panel" aria-label="GTSystems highlights">
-            <div className="hero-panel__label">Integrated business stack</div>
-            <div className="hero-panel__stat">
-              <span className="hero-panel__number">20+</span>
-              <span>χρόνια δίπλα στις επιχειρήσεις σε όλη την Ελλάδα</span>
-            </div>
-            <div className="hero-panel__stat">
-              <span className="hero-panel__number">1</span>
-              <span>συνεργάτης για λογισμικό, εξοπλισμό, δίκτυα και υποστήριξη</span>
-            </div>
-            <div className="hero-panel__stat">
-              <span className="hero-panel__number">GR</span>
-              <span>τεχνογνωσία ελληνικής αγοράς με εξυπηρέτηση σε όλη την Ελλάδα</span>
-            </div>
-          </aside>
-        </div>
+      <Nav />
+
+      <section className="hero hero--home-main">
+        <div className="container hero__inner"><div><p className="eyebrow">Business IT · POS · Networks · Web</p><h2>Ο τεχνολογικός κορμός για επιχειρήσεις που κινούνται κάθε μέρα.</h2><p>Η GTSystems συνδέει εμπορικό λογισμικό, POS, δίκτυα, ασφάλεια, τεχνική υποστήριξη και web εφαρμογές σε ένα λειτουργικό οικοσύστημα για την επιχείρησή σας.</p><div className="hero__actions"><Link className="button button--light" href="/contact">Μιλήστε με την GTSystems</Link><Link className="button button--ghost" href="/business-systems">Δείτε τις λύσεις</Link></div></div><Orbit /></div>
       </section>
 
       <section className="provider-strip" aria-label="Πάροχοι και τεχνολογίες">
@@ -162,43 +135,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="band band--white">
-        <div className="container">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Portfolio ιστοσελίδων</p>
-              <h2>Digital έργα που ήδη εξυπηρετούν επιχειρήσεις της Κέρκυρας.</h2>
-            </div>
-            <p>
-              Ενδεικτικά έργα ιστοσελίδων της GTSystems σε φιλοξενία, λιανική, υπηρεσίες,
-              καταλύματα, εστίαση, τουρισμό και τοπική επιχειρηματικότητα.
-            </p>
-          </div>
-
-          <div className="portfolio-grid">
-            {websiteProjects.slice(0, 6).map((project) => (
-              <a className="portfolio-card" href={project.website} key={project.href} target="_blank" rel="noopener noreferrer">
-                {project.image ? (
-                  <Image src={project.image} alt="" fill sizes="(max-width: 880px) 100vw, 33vw" style={{ objectFit: "cover" }} />
-                ) : (
-                  <span className="portfolio-card__placeholder" aria-hidden="true">{project.title.slice(0, 1)}</span>
-                )}
-                <span className="portfolio-card__content">
-                  <span className="portfolio-card__tag">{project.category}</span>
-                  <h3>{project.title}</h3>
-                  <span className="portfolio-card__link">Επίσκεψη ιστοσελίδας</span>
-                </span>
-              </a>
-            ))}
-          </div>
-
-          <div className="section-actions">
-            <Link className="button button--outline" href="/web-development">
-              Δείτε περισσότερα έργα
-            </Link>
-          </div>
-        </div>
-      </section>
+      <ProjectShowcase />
 
       <section className="band band--dark">
         <div className="container">

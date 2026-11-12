@@ -1,6 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { providers, supplierLogos, websiteProjects } from "@/lib/site";
+import Nav from "@/components/nav";
+import IntroStory from "@/components/intro-story";
+import { Orbit, ProjectShowcase } from "@/components/experience";
+import { providers, supplierLogos } from "@/lib/site";
 
 const services = [
   {
@@ -72,41 +75,12 @@ const englishProviders = [
 export default function EnglishHomePage() {
   return (
     <>
-      <section className="hero">
-        <div className="container hero__inner">
-          <div>
-            <p className="eyebrow">Business IT · POS · Networks · Web</p>
-            <h1>The technology backbone for businesses that move every day.</h1>
-            <p>
-              GTSystems connects business software, RBS and POS flows, cash systems, networks,
-              telecoms, security, support, and web applications into one working business ecosystem.
-            </p>
-            <div className="hero__actions">
-              <Link className="button button--light" href="/en/contact">
-                Talk to GTSystems
-              </Link>
-              <Link className="button button--ghost" href="/en/business-systems">
-                Explore Solutions
-              </Link>
-            </div>
-          </div>
+      <IntroStory english />
 
-          <aside className="hero-panel" aria-label="GTSystems highlights">
-            <div className="hero-panel__label">Integrated business stack</div>
-            <div className="hero-panel__stat">
-              <span className="hero-panel__number">20+</span>
-              <span>years supporting businesses across Greece</span>
-            </div>
-            <div className="hero-panel__stat">
-              <span className="hero-panel__number">1</span>
-              <span>partner for software, hardware, networks, and support</span>
-            </div>
-            <div className="hero-panel__stat">
-              <span className="hero-panel__number">GR</span>
-              <span>Greek-market know-how with service across Greece</span>
-            </div>
-          </aside>
-        </div>
+      <Nav />
+
+      <section className="hero hero--home-main">
+        <div className="container hero__inner"><div><p className="eyebrow">Business IT · POS · Networks · Web</p><h2>The technology backbone for businesses that move every day.</h2><p>GTSystems connects business software, POS, networks, security, support and web applications into one working business ecosystem.</p><div className="hero__actions"><Link className="button button--light" href="/en/contact">Talk to GTSystems</Link><Link className="button button--ghost" href="/en/business-systems">Explore solutions</Link></div></div><Orbit english /></div>
       </section>
 
       <section className="provider-strip" aria-label="Providers and technologies">
@@ -196,33 +170,7 @@ export default function EnglishHomePage() {
         </div>
       </section>
 
-      <section className="band band--white">
-        <div className="container">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Website portfolio</p>
-              <h2>Digital work already serving Corfu businesses.</h2>
-            </div>
-            <p>A sample of current GTSystems website projects across hospitality, retail, services, accommodation, and tourism.</p>
-          </div>
-          <div className="portfolio-grid">
-            {websiteProjects.slice(0, 6).map((project) => (
-              <a className="portfolio-card" href={project.website} key={project.href} target="_blank" rel="noopener noreferrer">
-                {project.image ? (
-                  <Image src={project.image} alt="" fill sizes="(max-width: 880px) 100vw, 33vw" style={{ objectFit: "cover" }} />
-                ) : (
-                  <span className="portfolio-card__placeholder" aria-hidden="true">{project.title.slice(0, 1)}</span>
-                )}
-                <span className="portfolio-card__content">
-                  <span className="portfolio-card__tag">{project.category}</span>
-                  <h3>{project.title}</h3>
-                  <span className="portfolio-card__link">Visit website</span>
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ProjectShowcase english />
 
       <section className="band band--dark">
         <div className="container">
