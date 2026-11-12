@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import DigitalScene from "@/components/digital-scene";
 import { PortfolioFilter } from "@/app/components/portfolio-filter";
 import { websiteProjects } from "@/lib/site";
 
@@ -43,6 +44,7 @@ const aiUses = [
 export default function WebDevelopmentPage() {
   return (
     <>
+      <div className="digital-experience">
       <section className="page-hero page-hero--digital">
         <div className="container digital-hero">
           <div>
@@ -63,30 +65,13 @@ export default function WebDevelopmentPage() {
             </div>
           </div>
 
-          <div className="digital-console" aria-label="Digital services overview">
-            <div className="digital-console__top">
-              <span>GTSystems Digital Stack</span>
-              <strong>Live</strong>
-            </div>
-            <div className="digital-console__grid">
-              <span>AI</span>
-              <span>Web Apps</span>
-              <span>Cybersecurity</span>
-              <span>Networks</span>
-              <span>Automation</span>
-              <span>Support</span>
-            </div>
-            <div className="digital-console__metric">
-              <strong>1</strong>
-              <span>ενιαία τεχνική ευθύνη από ιδέα μέχρι υποστήριξη</span>
-            </div>
-          </div>
+          <DigitalScene />
         </div>
       </section>
 
       <section className="page-content">
         <div className="container">
-          <div className="section-heading">
+          <div className="section-heading" data-reveal>
             <div>
               <p className="eyebrow">Τι μπορούμε να χτίσουμε</p>
               <h2>Από website μέχρι AI εργαλεία και ασφαλή λειτουργία.</h2>
@@ -98,8 +83,8 @@ export default function WebDevelopmentPage() {
           </div>
 
           <div className="capability-grid">
-            {capabilities.map((capability) => (
-              <article className="capability-card" key={capability.title}>
+            {capabilities.map((capability, index) => (
+              <article className="capability-card" key={capability.title} data-reveal data-number={String(index + 1).padStart(2, "0")}>
                 <h3>{capability.title}</h3>
                 <p>{capability.text}</p>
                 <div>
@@ -114,7 +99,7 @@ export default function WebDevelopmentPage() {
       </section>
 
       <section className="ai-section" id="ai">
-        <div className="container ai-layout">
+        <div className="container ai-layout" data-reveal>
           <div>
             <p className="eyebrow">AI στην πράξη</p>
             <h2>Όχι hype. Μικροί, χρήσιμοι αυτοματισμοί που μπαίνουν στη ροή της επιχείρησης.</h2>
@@ -136,7 +121,7 @@ export default function WebDevelopmentPage() {
       </section>
 
       <section className="band band--white">
-        <div className="container feature-mosaic">
+        <div className="container feature-mosaic" data-reveal>
           <div className="feature-tile feature-tile--dark">
             <p className="eyebrow">Cybersecurity</p>
             <h2>Προστασία πριν το πρόβλημα γίνει διακοπή λειτουργίας.</h2>
@@ -173,6 +158,8 @@ export default function WebDevelopmentPage() {
           </div>
         </div>
       </section>
+
+      </div>
 
       <section className="band band--white">
         <div className="container">

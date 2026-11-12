@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import Nav from "@/components/nav";
 import IntroStory from "@/components/intro-story";
 import { Orbit, ProjectShowcase } from "@/components/experience";
 import { providers, services, supplierLogos } from "@/lib/site";
@@ -17,9 +16,7 @@ export default function HomePage() {
     <>
       <IntroStory />
 
-      <Nav />
-
-      <section className="hero hero--home-main">
+      <section className="hero hero--home-main" id="main-site">
         <div className="container hero__inner"><div><p className="eyebrow">Business IT · POS · Networks · Web</p><h2>Ο τεχνολογικός κορμός για επιχειρήσεις που κινούνται κάθε μέρα.</h2><p>Η GTSystems συνδέει εμπορικό λογισμικό, POS, δίκτυα, ασφάλεια, τεχνική υποστήριξη και web εφαρμογές σε ένα λειτουργικό οικοσύστημα για την επιχείρησή σας.</p><div className="hero__actions"><Link className="button button--light" href="/contact">Μιλήστε με την GTSystems</Link><Link className="button button--ghost" href="/business-systems">Δείτε τις λύσεις</Link></div></div><Orbit /></div>
       </section>
 

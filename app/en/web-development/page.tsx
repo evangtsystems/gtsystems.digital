@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import DigitalScene from "@/components/digital-scene";
 import { PortfolioFilter } from "@/app/components/portfolio-filter";
 import { websiteProjects } from "@/lib/site";
 
@@ -42,6 +43,7 @@ const aiUses = [
 export default function EnglishWebDevelopmentPage() {
   return (
     <>
+      <div className="digital-experience">
       <section className="page-hero page-hero--digital">
         <div className="container digital-hero">
           <div>
@@ -60,30 +62,13 @@ export default function EnglishWebDevelopmentPage() {
               </Link>
             </div>
           </div>
-          <div className="digital-console" aria-label="Digital services overview">
-            <div className="digital-console__top">
-              <span>GTSystems Digital Stack</span>
-              <strong>Live</strong>
-            </div>
-            <div className="digital-console__grid">
-              <span>AI</span>
-              <span>Web Apps</span>
-              <span>Cybersecurity</span>
-              <span>Networks</span>
-              <span>Automation</span>
-              <span>Support</span>
-            </div>
-            <div className="digital-console__metric">
-              <strong>1</strong>
-              <span>single technical owner from idea to support</span>
-            </div>
-          </div>
+          <DigitalScene />
         </div>
       </section>
 
       <section className="page-content">
         <div className="container">
-          <div className="section-heading">
+          <div className="section-heading" data-reveal>
             <div>
               <p className="eyebrow">What we can build</p>
               <h2>From websites to AI tools and secure operations.</h2>
@@ -94,8 +79,8 @@ export default function EnglishWebDevelopmentPage() {
             </p>
           </div>
           <div className="capability-grid">
-            {capabilities.map((capability) => (
-              <article className="capability-card" key={capability.title}>
+            {capabilities.map((capability, index) => (
+              <article className="capability-card" key={capability.title} data-reveal data-number={String(index + 1).padStart(2, "0")}>
                 <h3>{capability.title}</h3>
                 <p>{capability.text}</p>
                 <div>
@@ -110,7 +95,7 @@ export default function EnglishWebDevelopmentPage() {
       </section>
 
       <section className="ai-section" id="ai">
-        <div className="container ai-layout">
+        <div className="container ai-layout" data-reveal>
           <div>
             <p className="eyebrow">Practical AI</p>
             <h2>No hype. Small, useful automations that fit into business workflows.</h2>
@@ -131,7 +116,7 @@ export default function EnglishWebDevelopmentPage() {
       </section>
 
       <section className="band band--white">
-        <div className="container feature-mosaic">
+        <div className="container feature-mosaic" data-reveal>
           <div className="feature-tile feature-tile--dark">
             <p className="eyebrow">Cybersecurity</p>
             <h2>Protection before a problem becomes downtime.</h2>
@@ -168,6 +153,8 @@ export default function EnglishWebDevelopmentPage() {
           </div>
         </div>
       </section>
+
+      </div>
 
       <section className="band band--white">
         <div className="container">

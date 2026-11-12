@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { websiteProjects } from "@/lib/site";
-import Nav from "@/components/nav";
 
 const symbols = ["▦", "⌁", "✳", "▣", "⌘", "↗", "◇", "◉"];
 const capabilities = [
@@ -23,7 +22,6 @@ export default function IntroStory({ english = false }: { english?: boolean }) {
   const [projectActive, setProjectActive] = useState(false);
   const [cardsActive, setCardsActive] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [introHeaderVisible, setIntroHeaderVisible] = useState(true);
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => setReducedMotion(media.matches);
@@ -42,8 +40,6 @@ export default function IntroStory({ english = false }: { english?: boolean }) {
       const root = scene.current;
       const stage = canvas.current;
       if (!root || !stage) return;
-      const siteHeader = document.getElementById("site-navigation");
-      setIntroHeaderVisible(!siteHeader || siteHeader.getBoundingClientRect().top > 0);
       const distance = Math.max(1, root.offsetHeight - window.innerHeight);
       const rect = root.getBoundingClientRect();
       const p = Math.max(0, Math.min(1, -rect.top / distance));
@@ -114,7 +110,6 @@ export default function IntroStory({ english = false }: { english?: boolean }) {
     return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", schedule); cancelAnimationFrame(frame); };
   }, [reducedMotion]);
   return <section className="intro-story" ref={scene} aria-label={english ? "Introduction to GTSystems" : "Γνωρίστε την GTSystems"}>
-    <div className={`intro-story__site-header${introHeaderVisible ? "" : " intro-story__site-header--hidden"}`} inert={!introHeaderVisible}><Nav intro /></div>
     <div className="intro-story__stage" ref={canvas}>
       <div className="intro-story__stars" aria-hidden="true" />
       <div className="intro-story__light" aria-hidden="true" />
@@ -130,7 +125,7 @@ export default function IntroStory({ english = false }: { english?: boolean }) {
         <h2>{english ? <>One partner.<br />Every connection.</> : <>Ένας συνεργάτης.<br />Κάθε σύνδεση.</>}</h2>
         <p>{english ? "We bring software, infrastructure and support together, so your business can work, connect and grow." : "Συνδέουμε λογισμικό, υποδομές και υποστήριξη, για να λειτουργεί η επιχείρησή σας και να εξελίσσεται."}</p>
         <div className="intro-story__tags"><span>BUSINESS SOFTWARE</span><span>POS & NETWORKS</span><span>WEB & SUPPORT</span></div>
-        <a href="#site-navigation">{english ? "EXPLORE GTSYSTEMS" : "ΓΝΩΡΙΣΤΕ ΤΗΝ GTSYSTEMS"} ↓</a>
+        <a href="#main-site">{english ? "EXPLORE GTSYSTEMS" : "ΓΝΩΡΙΣΤΕ ΤΗΝ GTSYSTEMS"} ↓</a>
       </div>
       <div className="intro-story__manifesto" aria-hidden={!reducedMotion && !quoteActive} aria-label={english ? "Our approach" : "Η προσέγγισή μας"}>
         <p>{english ? "Technology should bring clarity." : "Η τεχνολογία δίνει λύσεις."}</p>

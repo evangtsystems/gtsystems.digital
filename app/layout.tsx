@@ -54,7 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="el">
       <body>
         <div className="site-shell">
-          <Nav excludeHome />
+          <div className="site-header"><Nav /></div>
           <main className="site-main">{children}</main>
           <Footer />
           <Chatbot />

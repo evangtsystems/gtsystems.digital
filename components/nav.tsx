@@ -24,7 +24,7 @@ const navItems = {
   ],
 };
 
-export default function Nav({ excludeHome = false, intro = false }: { excludeHome?: boolean; intro?: boolean }) {
+export default function Nav() {
   const pathname = usePathname();
   const isEnglish = pathname.startsWith("/en");
   const languageHref = isEnglish ? pathname.replace(/^\/en/, "") || "/" : `/en${pathname === "/" ? "" : pathname}`;
@@ -34,11 +34,9 @@ export default function Nav({ excludeHome = false, intro = false }: { excludeHom
   const place = isEnglish ? "Corfu, Greece" : `${site.city}, ${site.country}`;
   const hours = isEnglish ? "Mon - Fri: 9.00 - 17.00" : site.hours;
 
-  if (excludeHome && (pathname === "/" || pathname === "/en")) return null;
-
   return (
     <>
-      <header className="topbar" id={intro ? undefined : "site-navigation"}>
+      <header className="topbar" id="site-navigation">
         <div className="container topbar__inner">
           <Link href={isEnglish ? "/en" : "/"} className="brand-link" aria-label={isEnglish ? "GTSystems home" : "Αρχική σελίδα GTSystems"}>
             <Image

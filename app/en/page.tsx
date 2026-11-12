@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import Nav from "@/components/nav";
 import IntroStory from "@/components/intro-story";
 import { Orbit, ProjectShowcase } from "@/components/experience";
 import { providers, supplierLogos } from "@/lib/site";
@@ -77,9 +76,7 @@ export default function EnglishHomePage() {
     <>
       <IntroStory english />
 
-      <Nav />
-
-      <section className="hero hero--home-main">
+      <section className="hero hero--home-main" id="main-site">
         <div className="container hero__inner"><div><p className="eyebrow">Business IT · POS · Networks · Web</p><h2>The technology backbone for businesses that move every day.</h2><p>GTSystems connects business software, POS, networks, security, support and web applications into one working business ecosystem.</p><div className="hero__actions"><Link className="button button--light" href="/en/contact">Talk to GTSystems</Link><Link className="button button--ghost" href="/en/business-systems">Explore solutions</Link></div></div><Orbit english /></div>
       </section>
 
