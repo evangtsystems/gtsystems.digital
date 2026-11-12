@@ -1808,7 +1808,7 @@ textarea.field {
 .topbar { background: #090e0c; border: 0; box-shadow: none; }
 .topbar__inner { min-height: 76px; }
 .brand-link::after { display: none; }
-.brand-link img { width: 210px; filter: brightness(0) invert(1); }
+.brand-link img { width: 210px; }
 .topbar__meta { color: #adb7a8; }
 .topbar__meta span, .topbar__meta a { background: transparent; border: 0; box-shadow: none; padding: 0 8px; }
 .topbar__meta strong { color: #dce9ca; }

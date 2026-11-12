@@ -40,7 +40,7 @@ export default function Nav() {
         <div className="container topbar__inner">
           <Link href={isEnglish ? "/en" : "/"} className="brand-link" aria-label={isEnglish ? "GTSystems home" : "Αρχική σελίδα GTSystems"}>
             <Image
-              src={site.logoBlack}
+              src={site.logoWhite}
               alt="GTSystems I.T. Business Solutions"
               width={300}
               height={82}
