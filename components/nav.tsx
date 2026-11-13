@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { site } from "@/lib/site";
 
 const navItems = {
@@ -25,6 +26,7 @@ const navItems = {
 };
 
 export default function Nav() {
+  const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const isEnglish = pathname.startsWith("/en");
   const languageHref = isEnglish ? pathname.replace(/^\/en/, "") || "/" : `/en${pathname === "/" ? "" : pathname}`;
@@ -38,7 +40,13 @@ export default function Nav() {
     <>
       <header className="topbar" id="site-navigation">
         <div className="container topbar__inner">
-          <Link href={isEnglish ? "/en" : "/"} className="brand-link" aria-label={isEnglish ? "GTSystems home" : "Αρχική σελίδα GTSystems"}>
+          <Link href={isEnglish ? "/en" : "/"} className="brand-link" aria-label={isEnglish ? "GTSystems home" : "Αρχική σελίδα GTSystems"} onClick={(event) => {
+            setMenuOpen(false);
+            if (pathname === (isEnglish ? "/en" : "/")) {
+              event.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          }}>
             <Image
               src={site.logoWhite}
               alt="GTSystems I.T. Business Solutions"
@@ -48,6 +56,10 @@ export default function Nav() {
               unoptimized
             />
           </Link>
+
+          <button className="nav__toggle" type="button" aria-expanded={menuOpen} aria-controls="primary-navigation" aria-label={menuOpen ? (isEnglish ? "Close menu" : "Κλείσιμο μενού") : (isEnglish ? "Open menu" : "Άνοιγμα μενού")} onClick={() => setMenuOpen(!menuOpen)}>
+            <span /> <span /> <span />
+          </button>
 
           <div className="topbar__meta" aria-label={isEnglish ? "Business contact details" : "Στοιχεία επικοινωνίας επιχείρησης"}>
             <span>{place}</span>
@@ -59,13 +71,14 @@ export default function Nav() {
         </div>
       </header>
 
-      <nav className="nav" aria-label={isEnglish ? "Primary navigation" : "Κύρια πλοήγηση"}>
+      <nav id="primary-navigation" className={`nav${menuOpen ? " nav--open" : ""}`} aria-label={isEnglish ? "Primary navigation" : "Κύρια πλοήγηση"}>
         <div className="container nav__inner">
           <div className="nav__links">
             {items.map((item) => (
               <Link
                 className={`nav__link${pathname === item.href ? " nav__link--active" : ""}`}
                 href={item.href}
+                onClick={() => setMenuOpen(false)}
                 key={item.href}
               >
                 {item.label}
@@ -76,11 +89,12 @@ export default function Nav() {
             <Link
               className="language-switch"
               href={languageHref}
+              onClick={() => setMenuOpen(false)}
               aria-label={isEnglish ? "Switch to Greek" : "Switch to English"}
             >
               <span>{languageLabel}</span>
             </Link>
-            <Link className="nav__cta" href={contactHref}>
+            <Link className="nav__cta" href={contactHref} onClick={() => setMenuOpen(false)}>
               {isEnglish ? "Contact Us" : "Επικοινωνία"}
             </Link>
           </div>

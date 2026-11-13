@@ -2119,3 +2119,28 @@ html:has(.portfolio-page) { scroll-snap-type: none; }
 @media (prefers-reduced-motion: reduce) { .digital-scene__orbit--one,.digital-scene__orbit--two { animation: none; } }
 .digital-scene__core span { font-size: clamp(21px,2.8vw,36px); letter-spacing: -.055em; }
 .digital-scene__core span { max-width: 90%; font-size: clamp(15px,1.4vw,21px); letter-spacing: -.045em; white-space: nowrap; }
+
+/* Compact navigation gives the mobile experience room to breathe. */
+.nav__toggle { display: none; }
+@media (max-width: 760px) {
+  .site-header { display: block; position: relative; z-index: 100; }
+  .topbar__inner { display: flex; justify-content: space-between; gap: 12px; }
+  .brand-link { min-width: 0; }
+  .nav__toggle { display: flex; flex-direction: column; justify-content: center; gap: 5px; width: 44px; height: 44px; padding: 10px; border: 1px solid #6d8465; background: transparent; cursor: pointer; }
+  .nav__toggle span { display: block; width: 100%; height: 2px; background: #dce9ca; }
+  .nav:not(.nav--open) { display: none; }
+  .nav--open { display: block; position: absolute !important; top: 64px; left: 0; right: 0; max-height: calc(100dvh - 64px); overflow-y: auto; z-index: 101; }
+  .nav--open .nav__inner { display: flex; flex-direction: column; align-items: stretch; gap: 12px; padding: 12px 0 20px; }
+  .nav--open .nav__links { order: 0; display: flex; flex-direction: column; flex: none; width: 100%; }
+  .nav--open .nav__link { min-height: 44px; padding: 0 10px; font-size: 15px; }
+  .nav--open .nav__link--active::after { right: auto; left: 10px; width: 34px; }
+  .nav--open .nav__actions { order: 1; width: 100%; margin: 0; justify-content: flex-start; }
+  #main-site { scroll-margin-top: 70px; }
+}
+
+/* On small screens, vertical scrolling carries each capability into view. */
+@media (max-width: 700px) and (prefers-reduced-motion: no-preference) {
+  .intro-story { height: 1600svh; }
+  .intro-story__capabilities-grid { overflow-x: hidden; scroll-snap-type: none; }
+  .intro-story__capabilities-grid .intro-capability { flex: 0 0 100%; }
+}

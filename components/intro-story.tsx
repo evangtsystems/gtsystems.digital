@@ -15,6 +15,7 @@ const capabilities = [
 export default function IntroStory({ english = false }: { english?: boolean }) {
   const scene = useRef<HTMLElement>(null);
   const canvas = useRef<HTMLDivElement>(null);
+  const cards = useRef<HTMLDivElement>(null);
   const [chapter, setChapter] = useState<0 | 1 | 2>(0);
   const [aboutActive, setAboutActive] = useState(false);
   const [quoteActive, setQuoteActive] = useState(false);
@@ -59,12 +60,17 @@ export default function IntroStory({ english = false }: { english?: boolean }) {
       const aboutOut = clamp((p - .32) / .06);
       const quoteIn = clamp((p - .38) / .06);
       const quoteOut = clamp((p - .46) / .05);
+      const mobile = window.innerWidth <= 700;
       const cardsIn = clamp((p - .52) / .06);
-      const cardsOut = clamp((p - .63) / .06);
-      const light = clamp((p - .69) / .07);
-      const workIn = clamp((p - .73) / .05);
-      const workOut = clamp((p - .82) / .04);
-      const projectIn = clamp((p - .87) / .05);
+      const cardsOut = mobile ? clamp((p - .76) / .04) : clamp((p - .63) / .06);
+      const light = mobile ? clamp((p - .80) / .05) : clamp((p - .69) / .07);
+      const workIn = mobile ? clamp((p - .83) / .04) : clamp((p - .73) / .05);
+      const workOut = mobile ? clamp((p - .89) / .03) : clamp((p - .82) / .04);
+      const projectIn = mobile ? clamp((p - .94) / .03) : clamp((p - .87) / .05);
+      if (mobile && !reducedMotion && cards.current) {
+        const cardProgress = clamp((p - .58) / .17);
+        cards.current.scrollLeft = cardProgress * (cards.current.scrollWidth - cards.current.clientWidth);
+      }
       root.style.setProperty("--intro-progress", String(p));
       root.style.setProperty("--intro-welcome-exit", String(welcomeExit));
       root.style.setProperty("--intro-camera", String(camera));
@@ -88,7 +94,7 @@ export default function IntroStory({ english = false }: { english?: boolean }) {
         tile.style.zIndex = String(Math.round(10 + depth * 8));
         tile.style.opacity = String((.36 + (depth + 1) * .32) * (1 - light * .3));
       });
-      setChapter(p < .20 ? 0 : p < .70 ? 1 : 2);
+      setChapter(p < .20 ? 0 : p < (mobile ? .80 : .70) ? 1 : 2);
       setAboutActive(aboutIn >= .5 && aboutOut < .5);
       setQuoteActive(quoteIn >= .5 && quoteOut < .5);
       setCardsActive(cardsIn >= .5 && cardsOut < .5);
@@ -132,13 +138,13 @@ export default function IntroStory({ english = false }: { english?: boolean }) {
         <p>{english ? "Connected systems make progress possible." : "Οι σωστές συνδέσεις κάνουν τη διαφορά."}</p>
       </div>
       <section className="intro-story__capabilities" inert={!reducedMotion && !cardsActive} aria-label={english ? "Digital capabilities" : "Ψηφιακές δυνατότητες"}>
-        <div className="intro-story__capabilities-grid">
+        <div className="intro-story__capabilities-grid" ref={cards}>
           {capabilities.map((item, index) => <article className="intro-capability" key={item.title[1]}>
             <div className="intro-capability__art"><span className="intro-capability__number">{String(index + 1).padStart(2, "0")}</span><span className="intro-capability__icon" aria-hidden="true">{item.icon}</span></div>
             <div className="intro-capability__body"><h3>{item.title[english ? 1 : 0]}</h3><p>{item.description[english ? 1 : 0]}</p><div className="intro-capability__tags">{item.tags.map(tag => <span key={tag}>{tag}</span>)}</div><Link href={english ? "/en/web-development" : "/web-development"}>{english ? "Learn more" : "Μάθετε περισσότερα"} <span aria-hidden="true">↗</span></Link></div>
           </article>)}
         </div>
-        <p className="intro-story__capabilities-hint">{english ? "Swipe to explore →" : "Σύρετε για περισσότερα →"}</p>
+        <p className="intro-story__capabilities-hint">{reducedMotion ? (english ? "Swipe to explore →" : "Σύρετε για περισσότερα →") : (english ? "Scroll to explore →" : "Κυλήστε για περισσότερα →")}</p>
       </section>
       <section className="intro-story__work" inert={!reducedMotion && !workActive} aria-label={english ? "Our work" : "Τα έργα μας"}>
         <div className="intro-story__chapter-label"><span>02</span> {english ? "WORK" : "ΕΡΓΑ"}</div>
