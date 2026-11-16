@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import { verifyTurnstile } from "@/lib/turnstile";
 
 export const runtime = "nodejs";
-const contactRecipient = "evangelos.lampos@gtsystems.gr";
+const contactRecipients = [
+  { email: "info@gtsystems.gr", name: "GTSystems" },
+  { email: "evangelos.lampos@gtsystems.gr", name: "Evangelos Lampos" },
+];
 const brevoEndpoint = "https://api.brevo.com/v3/smtp/email";
 
 const maxLengths = {
@@ -79,12 +82,7 @@ async function sendContactEmail(payload: ContactPayload) {
         name: senderName,
         email: senderEmail,
       },
-      to: [
-        {
-          email: contactRecipient,
-          name: "Evangelos Lampos",
-        },
-      ],
+      to: contactRecipients,
       replyTo: {
         email: payload.email,
         name: payload.name,
