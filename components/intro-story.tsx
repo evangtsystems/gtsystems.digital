@@ -54,9 +54,9 @@ export default function IntroStory({ english = false }: { english?: boolean }) {
       // Keep the opening composition on screen while the ring turns; only then
       // move the camera and introduce the About chapter.
       const clamp = (value: number) => Math.max(0, Math.min(1, value));
-      const welcomeExit = clamp((p - .14) / .07);
-      const camera = clamp((p - .15) / .25);
-      const aboutIn = clamp((p - .23) / .07);
+      const welcomeExit = clamp((p - .07) / .045);
+      const camera = clamp((p - .075) / .25);
+      const aboutIn = clamp((p - .115) / .045);
       const aboutOut = clamp((p - .32) / .06);
       const quoteIn = clamp((p - .38) / .06);
       const quoteOut = clamp((p - .46) / .05);
@@ -94,7 +94,7 @@ export default function IntroStory({ english = false }: { english?: boolean }) {
         tile.style.zIndex = String(Math.round(10 + depth * 8));
         tile.style.opacity = String((.36 + (depth + 1) * .32) * (1 - light * .3));
       });
-      setChapter(p < .20 ? 0 : p < (mobile ? .80 : .70) ? 1 : 2);
+      setChapter(p < .115 ? 0 : p < (mobile ? .80 : .70) ? 1 : 2);
       setAboutActive(aboutIn >= .5 && aboutOut < .5);
       setQuoteActive(quoteIn >= .5 && quoteOut < .5);
       setCardsActive(cardsIn >= .5 && cardsOut < .5);

@@ -29,6 +29,17 @@ BREVO_SENDER_NAME=GTSystems
 
 `BREVO_SENDER_EMAIL` must be a sender/domain verified inside Brevo.
 
+### Contact form bot protection
+
+Create a Cloudflare Turnstile widget for `gtsystems.gr` (and its subdomains, including `digital.gtsystems.gr`). Set these variables on the server before building and restarting the application:
+
+```bash
+TURNSTILE_SITE_KEY=your-cloudflare-site-key
+TURNSTILE_SECRET_KEY=your-cloudflare-secret-key
+```
+
+The site key is public; keep the secret key private and never commit it. Both are required in production: the form fails closed when either is missing or verification fails. Cloudflare's public test keys are rejected in production. In local development only, the application defaults to Cloudflare's always-pass test keys. The existing Brevo recipient is unchanged.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

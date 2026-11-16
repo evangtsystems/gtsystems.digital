@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { site } from "@/lib/site";
+import { turnstileSiteKey } from "@/lib/turnstile";
+import ContactVerification from "@/components/contact-verification";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -9,7 +11,7 @@ export const metadata: Metadata = {
 export default async function EnglishContactPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ sent?: string; error?: string; emailError?: string }>;
+  searchParams?: Promise<{ sent?: string; error?: string; emailError?: string; verificationError?: string }>;
 }) {
   const params = await searchParams;
   const sent = params?.sent === "1";
@@ -79,6 +81,11 @@ export default async function EnglishContactPage({
                 again or contact us directly at {site.email}.
               </div>
             ) : null}
+            {params?.verificationError === "1" ? (
+              <div className="contact-card" role="alert" style={{ padding: 14, borderColor: "#b54747" }}>
+                Verification failed or expired. Please try again or contact us by email.
+              </div>
+            ) : null}
             <input className="field" name="name" placeholder="Name" required />
             <input className="field" name="company" placeholder="Company" />
             <input className="field" name="email" placeholder="Email" type="email" required />
@@ -95,9 +102,7 @@ export default async function EnglishContactPage({
               <option>Other</option>
             </select>
             <textarea className="field" name="message" placeholder="Briefly describe what you need" required />
-            <button className="button" type="submit">
-              Send Request
-            </button>
+            <ContactVerification siteKey={turnstileSiteKey()} english />
           </form>
         </div>
       </section>

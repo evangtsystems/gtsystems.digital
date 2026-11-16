@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { site } from "@/lib/site";
+import { turnstileSiteKey } from "@/lib/turnstile";
+import ContactVerification from "@/components/contact-verification";
 
 export const metadata: Metadata = {
   title: "Επικοινωνία",
@@ -9,7 +11,7 @@ export const metadata: Metadata = {
 export default async function ContactPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ sent?: string; error?: string; emailError?: string }>;
+  searchParams?: Promise<{ sent?: string; error?: string; emailError?: string; verificationError?: string }>;
 }) {
   const params = await searchParams;
   const sent = params?.sent === "1";
@@ -78,6 +80,11 @@ export default async function ContactPage({
                 ξανά ή επικοινωνήστε απευθείας στο {site.email}.
               </div>
             ) : null}
+            {params?.verificationError === "1" ? (
+              <div className="contact-card" role="alert" style={{ padding: 14, borderColor: "#b54747" }}>
+                Η επιβεβαίωση απέτυχε ή έληξε. Παρακαλούμε δοκιμάστε ξανά ή επικοινωνήστε μαζί μας με email.
+              </div>
+            ) : null}
             <input className="field" name="name" placeholder="Ονοματεπώνυμο" required />
             <input className="field" name="company" placeholder="Εταιρεία" />
             <input className="field" name="email" placeholder="Email" type="email" required />
@@ -94,9 +101,7 @@ export default async function ContactPage({
               <option>Άλλο</option>
             </select>
             <textarea className="field" name="message" placeholder="Περιγράψτε σύντομα τι χρειάζεστε" required />
-            <button className="button" type="submit">
-              Αποστολή αιτήματος
-            </button>
+            <ContactVerification siteKey={turnstileSiteKey()} />
           </form>
         </div>
       </section>

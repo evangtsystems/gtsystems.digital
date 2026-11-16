@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 export const runtime = "nodejs";
 const contactRecipient = "evangelos.lampos@gtsystems.gr";
@@ -29,6 +30,11 @@ export async function POST(req: Request) {
 
   if (!payload.name || !payload.email || !payload.message || !isEmail(payload.email)) {
     return NextResponse.redirect(redirectUrl(req, `${contactPath}?error=1`), 303);
+  }
+
+  const token = String(formData.get("cf-turnstile-response") ?? "");
+  if (!(await verifyTurnstile(token))) {
+    return NextResponse.redirect(redirectUrl(req, `${contactPath}?verificationError=1`), 303);
   }
 
   try {
