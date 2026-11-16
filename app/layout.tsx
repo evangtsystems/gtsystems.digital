@@ -4,6 +4,7 @@ import Footer from "@/components/footer";
 import Chatbot from "@/components/chatbot";
 import Nav from "@/components/nav";
 import { site } from "@/lib/site";
+import { turnstileSiteKey } from "@/lib/turnstile";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -57,7 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="site-header"><Nav /></div>
           <main className="site-main">{children}</main>
           <Footer />
-          <Chatbot />
+          <Chatbot chatUrl={process.env.CHAT_SERVICE_URL ?? ""} turnstileSiteKey={turnstileSiteKey()} />
         </div>
 
         <Script

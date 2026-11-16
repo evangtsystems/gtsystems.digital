@@ -58,3 +58,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+### Live chat (separate service)
+
+The website live chat is hidden until `CHAT_SERVICE_URL` is set (for example, `https://chat.gtsystems.gr`) before building the website. Set `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` as described above. The separate chat service also needs its own `TURNSTILE_SECRET_KEY`, explicit allowed website/panel origins, HTTPS, persistent storage and the existing dashboard's internal authentication service. Do not enable the website link before the separate service is configured and verified.

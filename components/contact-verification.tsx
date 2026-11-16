@@ -19,7 +19,7 @@ declare global {
   interface Window { turnstile?: TurnstileApi }
 }
 
-export default function ContactVerification({ siteKey, english = false }: { siteKey: string; english?: boolean }) {
+export default function ContactVerification({ siteKey, english = false, submitLabel }: { siteKey: string; english?: boolean; submitLabel?: string }) {
   const container = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
   const [token, setToken] = useState("");
@@ -44,6 +44,6 @@ export default function ContactVerification({ siteKey, english = false }: { site
     <div ref={container} />
     <input type="hidden" name="cf-turnstile-response" value={token} />
     {(!siteKey || failed) && <p role="alert">{english ? "Verification is unavailable. Please try again or contact us by email." : "Η επιβεβαίωση δεν είναι διαθέσιμη. Δοκιμάστε ξανά ή επικοινωνήστε μαζί μας με email."}</p>}
-    <button className="button" type="submit" disabled={!token}>{english ? "Send Request" : "Αποστολή αιτήματος"}</button>
+    <button className="button" type="submit" disabled={!token}>{submitLabel ?? (english ? "Send Request" : "Αποστολή αιτήματος")}</button>
   </>;
 }

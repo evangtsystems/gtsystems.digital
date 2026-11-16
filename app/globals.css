@@ -2144,3 +2144,26 @@ html:has(.portfolio-page) { scroll-snap-type: none; }
   .intro-story__capabilities-grid { overflow-x: hidden; scroll-snap-type: none; }
   .intro-story__capabilities-grid .intro-capability { flex: 0 0 100%; }
 }
+
+.chatbot__live-button { margin: 0 16px 8px; padding: 11px; border: 1px solid #90b56f; background: #eaf4e4; color: #36582b; font-size: 13px; font-weight: 700; cursor: pointer; }
+.live-chat__heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-bottom: 1px solid #dfe9dc; font-size: 11px; color: #647662; }
+.live-chat__heading button { flex: none; border: 0; background: transparent; color: #456a37; cursor: pointer; padding: 4px 0; font-weight: 700; }
+.live-chat__start { overflow-y: auto; padding: 12px 16px; display: grid; gap: 9px; }
+.live-chat__start p { margin: 0; font-size: 12px; line-height: 1.45; color: #52634f; }
+.live-chat__start label { display: grid; gap: 4px; font-size: 11px; font-weight: 700; color: #43543e; }
+.live-chat__start input,.live-chat__start textarea { width: 100%; padding: 8px; border: 1px solid #cfddca; border-radius: 3px; background: #fff; color: #142015; font: inherit; }
+.live-chat__start textarea { min-height: 65px; resize: vertical; }
+.live-chat__start fieldset { min-width: 0; padding: 0; border: 0; }
+.live-chat__start fieldset .button { width: 100%; margin-top: 5px; }
+.live-chat__start .live-chat__notice { font-size: 10px; }
+.live-chat__error { margin: 0; padding: 8px 16px; color: #a43630; font-size: 12px; }
+.live-chat__start .live-chat__customer { display: flex; flex-wrap: wrap; gap: 10px 16px; margin: 0; padding: 0; border: 0; }
+.live-chat__customer legend { margin-bottom: 5px; font-size: 11px; font-weight: 700; color: #43543e; }
+.live-chat__customer label { display: inline-flex; align-items: center; gap: 5px; }
+.live-chat__customer input { width: auto; }
+.live-chat__verification { padding: 8px 16px; border-bottom: 1px solid #dfe9dc; color: #476b38; font-size: 11px; }
+.live-chat__verification button { padding: 4px 5px; border: 0; background: transparent; color: #456a37; font-size: 11px; font-weight: 700; cursor: pointer; }
+.live-chat__verification p { margin: 3px 0 8px; line-height: 1.45; color: #556654; }
+.live-chat__verification label { display: grid; gap: 4px; color: #43543e; }
+.live-chat__verification input { max-width: 200px; padding: 6px; border: 1px solid #cfddca; border-radius: 3px; }
+.live-chat__verified { font-weight: 700; }

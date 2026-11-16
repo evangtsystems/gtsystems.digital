@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { usePathname } from "next/navigation";
+import LiveChat from "@/components/live-chat";
 
 type ChatLink = { label: string; href: string };
 type Message = {
@@ -166,13 +167,18 @@ function getAnswer(question: string, isEnglish: boolean): Omit<Message, "id" | "
       };
 }
 
-export default function Chatbot() {
+export default function Chatbot({ chatUrl = "", turnstileSiteKey = "" }: { chatUrl?: string; turnstileSiteKey?: string }) {
   const pathname = usePathname();
   const isEnglish = pathname.startsWith("/en");
+  return <ChatbotContent key={isEnglish ? "en" : "el"} chatUrl={chatUrl} turnstileSiteKey={turnstileSiteKey} isEnglish={isEnglish} />;
+}
+
+function ChatbotContent({ chatUrl, turnstileSiteKey, isEnglish }: { chatUrl: string; turnstileSiteKey: string; isEnglish: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [nextId, setNextId] = useState(1);
+  const [live, setLive] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
 
@@ -180,12 +186,6 @@ export default function Chatbot() {
     if (isOpen) inputRef.current?.focus();
     messagesRef.current?.scrollTo({ top: messagesRef.current.scrollHeight, behavior: "smooth" });
   }, [isOpen, messages]);
-
-  useEffect(() => {
-    setMessages([]);
-    setDraft("");
-    setIsOpen(false);
-  }, [isEnglish]);
 
   function sendMessage(value: string) {
     const question = value.trim();
@@ -221,14 +221,15 @@ export default function Chatbot() {
           <header className="chatbot__header">
             <span className="chatbot__status" aria-hidden="true" />
             <div>
-              <strong>{isEnglish ? "GTSystems assistant" : "Βοηθός GTSystems"}</strong>
-              <span>{isEnglish ? "Here to point you in the right direction" : "Για να σας κατευθύνει στη σωστή λύση"}</span>
+              <strong>{live ? (isEnglish ? "GTSystems team" : "Ομάδα GTSystems") : (isEnglish ? "GTSystems assistant" : "Βοηθός GTSystems")}</strong>
+              <span>{live ? (isEnglish ? "Messages to our team" : "Μηνύματα προς την ομάδα μας") : (isEnglish ? "Here to point you in the right direction" : "Για να σας κατευθύνει στη σωστή λύση")}</span>
             </div>
             <button className="chatbot__close" type="button" onClick={() => setIsOpen(false)} aria-label={isEnglish ? "Close chat" : "Κλείσιμο συνομιλίας"}>
               ×
             </button>
           </header>
 
+          {live ? <LiveChat apiUrl={chatUrl} siteKey={turnstileSiteKey} english={isEnglish} onBack={() => setLive(false)} /> : <>
           <div className="chatbot__messages" ref={messagesRef} aria-live="polite">
             <div className="chatbot__message chatbot__message--assistant">
               {isEnglish
@@ -279,11 +280,13 @@ export default function Chatbot() {
               {isEnglish ? "Send" : "Αποστολή"}
             </button>
           </form>
+          {chatUrl && <button className="chatbot__live-button" type="button" onClick={() => setLive(true)}>{isEnglish ? "Chat with our team ↗" : "Μιλήστε με την ομάδα μας ↗"}</button>}
           <p className="chatbot__note">
             {isEnglish
               ? "Automated assistant · Messages are not stored or sent to an AI service."
               : "Αυτόματος βοηθός · Τα μηνύματα δεν αποθηκεύονται ούτε στέλνονται σε υπηρεσία AI."}
           </p>
+          </>}
         </section>
       )}
 
