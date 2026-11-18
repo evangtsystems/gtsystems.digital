@@ -2157,10 +2157,11 @@ html:has(.portfolio-page) { scroll-snap-type: none; }
 .live-chat__start fieldset .button { width: 100%; margin-top: 5px; }
 .live-chat__start .live-chat__notice { font-size: 10px; }
 .live-chat__error { margin: 0; padding: 8px 16px; color: #a43630; font-size: 12px; }
-.live-chat__start .live-chat__customer { display: flex; flex-wrap: wrap; gap: 10px 16px; margin: 0; padding: 0; border: 0; }
-.live-chat__customer legend { margin-bottom: 5px; font-size: 11px; font-weight: 700; color: #43543e; }
-.live-chat__customer label { display: inline-flex; align-items: center; gap: 5px; }
-.live-chat__customer input { width: auto; }
+.live-chat__start .live-chat__customer { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0; padding: 10px 12px 12px; border: 1px solid #a8c69d; border-radius: 8px; background: #f1f7ed; }
+.live-chat__customer legend { padding: 0 5px; font-size: 13px; font-weight: 700; color: #203f20; }
+.live-chat__start .live-chat__customer label { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 6px 12px; border: 1px solid #b8cdb0; border-radius: 5px; background: #fff; color: #203f20; font-size: 13px; cursor: pointer; }
+.live-chat__customer label:has(input:checked) { border-color: #397b37; background: #e0f0d9; }
+.live-chat__start .live-chat__customer input { width: auto; margin: 0; accent-color: #397b37; }
 .live-chat__verification { padding: 8px 16px; border-bottom: 1px solid #dfe9dc; color: #476b38; font-size: 11px; }
 .live-chat__verification button { padding: 4px 5px; border: 0; background: transparent; color: #456a37; font-size: 11px; font-weight: 700; cursor: pointer; }
 .live-chat__verification p { margin: 3px 0 8px; line-height: 1.45; color: #556654; }
