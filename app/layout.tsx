@@ -6,6 +6,7 @@ import Nav from "@/components/nav";
 import { site } from "@/lib/site";
 import { turnstileSiteKey } from "@/lib/turnstile";
 import "./globals.css";
+import "@/components/orbit/orbit.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(`https://${site.domain}`),

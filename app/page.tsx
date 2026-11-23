@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import IntroStory from "@/components/intro-story";
 import { Orbit, ProjectShowcase } from "@/components/experience";
-import { providers, services, supplierLogos } from "@/lib/site";
+import SolutionsOrbit from "@/components/orbit/Orbit";
+import { providers, supplierLogos } from "@/lib/site";
 
 const process = [
   ["Ανάλυση", "Καταγράφουμε την ανάγκη, τα υπάρχοντα εργαλεία, τους κινδύνους και το αποτέλεσμα που θέλετε."],
@@ -32,39 +33,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="band band--white">
-        <div className="container">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Λύσεις</p>
-              <h2>Όλα όσα χρειάζεται μια επιχείρηση για να λειτουργεί, να συνδέεται και να μεγαλώνει.</h2>
-            </div>
-            <p>
-              Αντί για αποσπασματικά εργαλεία, συνδυάζουμε δοκιμασμένες πλατφόρμες, αξιόπιστη
-              υποδομή και συνεχή υποστήριξη γύρω από την πραγματική ροή εργασίας σας.
-            </p>
-          </div>
-
-          <div className="service-grid">
-            {services.map((service) => (
-              <article className="service-card" key={service.title}>
-                <div className="service-card__image">
-                  <Image src={service.image} alt="" fill sizes="(max-width: 880px) 100vw, 33vw" style={{ objectFit: "cover" }} />
-                </div>
-                <div className="service-card__body">
-                  <h3>{service.title}</h3>
-                  <p>{service.summary}</p>
-                  <ul>
-                    {service.points.map((point) => (
-                      <li key={point}>{point}</li>
-                    ))}
-                  </ul>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+      <SolutionsOrbit />
 
       <section className="band">
         <div className="container split">
