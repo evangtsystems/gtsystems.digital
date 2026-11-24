@@ -1,3 +1,6 @@
+Warning: truncated output (original token count: 7797)
+Total output lines: 245
+
 import { NextResponse } from "next/server";
 import { lookup } from "node:dns/promises";
 import { request as httpRequest } from "node:http";
@@ -7,7 +10,9 @@ import * as ipaddr from "ipaddr.js";
 import robotsParser from "robots-parser";
 import * as cheerio from "cheerio";
 import { chromium } from "playwright-core";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
+import { homedir } from "node:os";
+import { join } from "node:path";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,7 +28,9 @@ type Finding = { title: string; status: "found" | "review" | "unknown"; detail: 
 type Rendered = { title: string; h1: string; canonical: string; text: string; headings: string[]; links: string[]; schemas: string[]; description: string; };
 
 async function renderPage(home: Result): Promise<Rendered> {
-  const candidates = [process.env.AUDIT_BROWSER_PATH, "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe", "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe", "/usr/bin/chromium", "/usr/bin/chromium-browser", "/usr/bin/google-chrome"].filter((path): path is string => !!path);
+  const browserCache = join(homedir(), ".cache", "ms-playwright");
+  const cachedChromium = existsSync(browserCache) ? readdirSync(browserCache, { withFileTypes: true }).filter((entry) => entry.isDirectory() && /^chromium-\d+$/.test(entry.name)).map((entry) => join(browserCache, entry.name, "chrome-linux64", "chrome")) : [];
+  const candidates = [process.env.AUDIT_BROWSER_PATH, ...cachedChromium, "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe", "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe", "/usr/bin/chromium", "/usr/bin/chromium-browser", "/usr/bin/google-chrome"].filter((path): path is string => !!path);
   const executablePath = candidates.find(existsSync);
   if (!executablePath) throw new Error("Browser unavailable");
   const browser = await chromium.launch({ executablePath, headless: true, args: ["--disable-quic", "--disable-background-networking", "--disable-webrtc", "--no-proxy-server"] });
@@ -168,32 +175,7 @@ export async function POST(req: Request) {
       if (robots.isAllowed(candidate, agent) !== true) { skipped++; continue; }
       try {
         const page = await fetchPublic(candidate);
-        const finalUrl = new URL(page.url);
-        finalUrl.hash = "";
-        if (finalUrl.origin !== base || robots.isAllowed(finalUrl.href, agent) !== true || page.status !== 200 || !/html/i.test(page.type)) { skipped++; continue; }
-        if (visited.has(finalUrl.href)) continue;
-        visited.add(finalUrl.href);
-        pages.push({ ...page, url: finalUrl.href });
-      } catch { skipped++; }
-    }
-    for (const page of pages) {
-      const doc = cheerio.load(page.body);
-      const title = doc("title").first().text().trim();
-      const description = doc('meta[name="description" i]').attr("content")?.trim();
-      const h1 = doc("h1").first().text().replace(/\s+/g," ").trim();
-      const noindex = [doc('meta[name="robots" i]').attr("content"), page.headers["x-robots-tag"]].flat().filter(Boolean).join(" ");
-      const canonical = doc('link[rel~="canonical" i]').first().attr("href");
-      let canonicalUrl = "";
-      try { if (canonical) canonicalUrl = new URL(canonical, page.url).href; } catch { /* invalid URL is flagged below */ }
-      findings.push({ title: `Τίτλος · ${new URL(page.url).pathname}`, status: title ? "found" : "review", detail: title ? "Βρέθηκε τίτλος σελίδας." : "Δεν βρέθηκε τίτλος στο HTML.", evidence: title?.slice(0, 200), url: page.url });
-      findings.push({ title: `Κύρια επικεφαλίδα · ${new URL(page.url).pathname}`, status: h1 ? "found" : "review", detail: h1 ? "Βρέθηκε επικεφαλίδα H1." : "Δεν βρέθηκε H1 στο αρχικό HTML.", evidence: h1?.slice(0, 200), url: page.url });
-      if (page.url === home.url && title && h1) {
-        const tokens = (s: string): string[] => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("el").match(/[\p{L}\p{N}]{5,}/gu) ?? [];
-        const titleTokens = tokens(title); const headlineTokens = tokens(h1);
-        if (titleTokens.length && headlineTokens.length && !headlineTokens.some(word => titleTokens.includes(word))) findings.push({ title: "Σαφήνεια αρχικής επικεφαλίδας · χειροκίνητος έλεγχος", status: "review", detail: "Η επικεφαλίδα και ο τίτλος δεν μοιράζονται λέξεις 5+ χαρακτήρων. Αυτό δεν είναι σφάλμα ή παράγοντας κατάταξης· ελέγξτε αν η επικεφαλίδα εξηγεί σε έναν νέο επισκέπτη τι προσφέρει η επιχείρηση.", evidence: `H1: ${h1.slice(0, 160)} | Τίτλος: ${title.slice(0, 160)}`, url: page.url });
-      }
-      findings.push({ title: `Οδηγία ευρετηρίασης · ${new URL(page.url).pathname}`, status: /noindex/i.test(noindex) ? "review" : "found", detail: /noindex/i.test(noindex) ? "Βρέθηκε οδηγία noindex. Ελέγξτε αν είναι σκόπιμη." : "Δεν εντοπίστηκε γενική οδηγία noindex στο αρχικό HTML ή στην απόκριση. Αυτό δεν επιβεβαιώνει ευρετηρίαση.", evidence: noindex.slice(0, 200) || undefined, url: page.url });
-      findings.push({ title: `Περιγραφή · ${new URL(page.url).pathname}`, status: description ? "found" : "review", detail: description ? "Βρέθηκε meta description στο αρχικό HTML." : "Δεν βρέθηκε meta description στο αρχικό HTML.", evidence: description?.slice(0, 200), url: page.url });
+        const finalUrl = n…797 tokens truncated…ραφή · ${new URL(page.url).pathname}`, status: description ? "found" : "review", detail: description ? "Βρέθηκε meta description στο αρχικό HTML." : "Δεν βρέθηκε meta description στο αρχικό HTML.", evidence: description?.slice(0, 200), url: page.url });
       findings.push({ title: `Canonical · ${new URL(page.url).pathname}`, status: canonicalUrl ? "found" : "review", detail: canonicalUrl ? "Δηλωμένη canonical διεύθυνση στο αρχικό HTML. Η Google μπορεί να επιλέξει διαφορετική." : "Δεν βρέθηκε έγκυρη canonical διεύθυνση στο αρχικό HTML. Η απουσία της δεν σημαίνει απαραίτητα πρόβλημα.", evidence: canonicalUrl || canonical, url: page.url });
       const path = new URL(page.url).pathname;
       const lang = doc("html").attr("lang")?.trim();

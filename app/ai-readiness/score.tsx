@@ -44,7 +44,8 @@ export default function Score({findings, pages}: {findings:Finding[]; pages:numb
  const passed=measured.filter(f=>f.status==="found").length;
  const ratio=measured.length ? passed/measured.length : null;
  const score=ratio===null ? null : Math.round(ratio*80);
- const ringStyle={"--score-progress":`${ratio===null?0:Math.round(ratio*100)}%`} as CSSProperties;
+ // The automated audit can award at most 80 points on the public 100-point scale.
+ const ringStyle={"--score-progress":`${score ?? 0}%`} as CSSProperties;
  const sortByPriority=(a:Finding,b:Finding)=>{
   const priority=(f:Finding)=>f.title.includes("robots.txt")||f.title.startsWith("Οδηγία")?0:f.title.startsWith("Τίτλος")||f.title.startsWith("Κύρια")?1:2;
   return priority(a)-priority(b);
@@ -62,28 +63,28 @@ export default function Score({findings, pages}: {findings:Finding[]; pages:numb
    </div>
    <div className="readiness-orbit">
     <SignalBubble tone="strength" label="ΘΕΤΙΚΑ ΣΗΜΑΤΑ" title="Τι βρέθηκε" items={strengths} empty="Δεν επιβεβαιώθηκαν θετικά σήματα στους συγκεκριμένους ελέγχους." />
-    <div className="readiness-score-ring" style={ringStyle} role="img" aria-label={score===null?"Το σκορ δεν είναι διαθέσιμο":`${score} από 80 τεχνικούς πόντους`}>
+    <div className="readiness-score-ring" style={ringStyle} role="img" aria-label={score===null?"Το σκορ δεν είναι διαθέσιμο":`${score} από 100 πόντους`}>
      <div className="readiness-score-inner">
       <span>ΤΕΧΝΙΚΑ ΣΗΜΑΤΑ</span>
       <strong>{score===null?"—":score}</strong>
-      <small>από 80 πόντους</small>
+      <small>από 100 πόντους</small>
       <em>{passed} / {measured.length} επιβεβαιωμένοι έλεγχοι</em>
      </div>
     </div>
-    <SignalBubble tone="review" label="ΓΙΑ ΕΠΑΝΕΞΕΤΑΣΗ" title="Ευκαιρίες βελτίωσης" items={improvements.slice(0,3)} empty="Δεν επισημάνθηκαν προβλήματα σε αυτούς τους ελέγχους." />
+   <SignalBubble tone="review" label="ΓΙΑ ΕΠΑΝΕΞΕΤΑΣΗ" title="Ευκαιρίες βελτίωσης" items={improvements.slice(0,3)} empty="Δεν βρέθηκαν επιβεβαιωμένα τεχνικά προβλήματα. Για επιπλέον βελτιστοποίηση, ελέγξτε την ποιότητα περιεχομένου, την πραγματική ευρετηρίαση και την παρουσία σε απαντήσεις AI." />
     <SignalBubble tone="unknown" label="ΕΚΤΟΣ ΑΥΤΟΜΑΤΟΥ ΣΚΟΡ" title="Δεν αξιολογήθηκε" items={unknown.slice(0,2)} empty="Η ποιότητα περιεχομένου, η ευρετηρίαση και η εμφάνιση σε AI δεν αξιολογούνται αυτόματα." />
    </div>
    <div className="readiness-scope">
-    <div><span>ΤΙ ΜΕΤΡΑ</span><p>Μέχρι 80 πόντους από επαληθεύσιμους τεχνικούς ελέγχους στις {pages} σελίδες του δείγματος.</p></div>
+    <div><span>ΤΙ ΜΕΤΡΑ</span><p>Έως 80/100 από επαληθεύσιμους τεχνικούς ελέγχους στις {pages} σελίδες του δείγματος.</p></div>
     <div><span>ΤΙ ΔΕΝ ΜΕΤΡΑ</span><p>Ποιότητα περιεχομένου, πραγματική ευρετηρίαση και εμφάνιση σε απαντήσεις AI. Αυτά χρειάζονται ξεχωριστό έλεγχο.</p></div>
-    <details><summary>Πώς υπολογίζεται</summary><p>Κάθε επιβεβαιωμένος έλεγχος μετρά ισότιμα. Το σκορ είναι το ποσοστό επιτυχών ελέγχων επί των επιβεβαιωμένων, μεταφερμένο σε κλίμακα 80 πόντων. Άγνωστα ή μη διαθέσιμα στοιχεία εξαιρούνται και δεν θεωρούνται αδυναμίες. Η παρουσία ενός στοιχείου δεν αξιολογεί την ποιότητά του.</p></details>
+    <details><summary>Πώς υπολογίζεται</summary><p>Κάθε επιβεβαιωμένος έλεγχος μετρά ισότιμα. Το ποσοστό επιτυχών ελέγχων μετατρέπεται σε σκορ με ανώτατο όριο 80/100. Οι υπόλοιποι 20 πόντοι αφορούν τομείς που χρειάζονται ξεχωριστή αξιολόγηση, όπως η ποιότητα περιεχομένου και η ορατότητα σε AI. Άγνωστα ή μη διαθέσιμα στοιχεία εξαιρούνται και δεν θεωρούνται αδυναμίες. Η παρουσία ενός στοιχείου δεν αξιολογεί την ποιότητά του.</p></details>
    </div>
   </section>
   <section className="readiness-actions">
    <p className="audit-eyebrow">ΕΠΟΜΕΝΑ ΒΗΜΑΤΑ</p>
    <h3>Ευρήματα για προσεκτικό έλεγχο.</h3>
    {improvements.length ? <div className="readiness-action-list">{improvements.map((f,i)=><article key={`${f.title}-${i}`}><span>{String(i+1).padStart(2,"0")}</span><div><h4>{f.title}</h4>{f.evidence && <blockquote>{f.evidence}</blockquote>}<p>{f.detail}</p><p>{instruction(f)}</p>{f.url && <a href={f.url} target="_blank" rel="noreferrer">Δείτε τη σελίδα ή το αρχείο ↗</a>}</div></article>)}</div> : <p>Δεν εντοπίστηκε ζήτημα στους αυτοματοποιημένους ελέγχους. Ακολουθούν προαιρετικά σημεία που απαιτούν ανθρώπινη αξιολόγηση.</p>}
-   <div className="readiness-manual"><strong>Πιθανά θέματα για ανθρώπινη αξιολόγηση</strong><p>Ελέγξτε αν οι σελίδες υπηρεσιών εξηγούν τι προσφέρετε, πού και σε ποιους, αν υπάρχουν παραδείγματα έργων και αν τα στοιχεία επιχείρησης είναι συνεπή. Αυτά είναι ερωτήματα για έλεγχο, όχι επιβεβαιωμένες αδυναμίες.</p><p>Τα δομημένα δεδομένα μπορούν να ελεγχθούν με το <a href="https://search.google.com/test/rich-results" target="_blank" rel="noreferrer">Rich Results Test ↗</a>. Η απουσία τους δεν αποδεικνύει πρόβλημα στην AI αναζήτηση.</p></div>
+   <div className="readiness-manual"><strong>Πού μπορεί να υπάρχει επιπλέον περιθώριο βελτιστοποίησης</strong><p>Η τεχνική εικόνα από μόνη της δεν αξιολογεί αν οι σελίδες υπηρεσιών απαντούν στις ερωτήσεις των πελατών, αν τεκμηριώνουν την εμπειρία της επιχείρησης ή αν το περιεχόμενο αναφέρεται σωστά από εργαλεία AI. Αυτά είναι πεδία για ξεχωριστό έλεγχο και δεν παρουσιάζονται ως επιβεβαιωμένα προβλήματα.</p><p>Τα δομημένα δεδομένα μπορούν να ελεγχθούν με το <a href="https://search.google.com/test/rich-results" target="_blank" rel="noreferrer">Rich Results Test ↗</a>. Η απουσία τους δεν αποδεικνύει πρόβλημα στην AI αναζήτηση.</p></div>
   </section>
  </>;
 }
