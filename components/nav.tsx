@@ -14,6 +14,7 @@ const navItems = {
     { label: "Portfolio", href: "/portfolio" },
     { label: "Υποστήριξη", href: "/web-apps" },
     { label: "Εταιρεία", href: "/company" },
+    { label: "AI Check", href: "/ai-readiness" },
   ],
   en: [
     { label: "Home", href: "/en" },
