@@ -28,7 +28,7 @@ export default function AuditForm() {
   return <>
     <form onSubmit={submit} className="audit-form">
       <label htmlFor="audit-domain">Η διεύθυνση της ιστοσελίδας σας</label>
-      <div className="audit-input-row"><input id="audit-domain" value={domain} onChange={e => setDomain(e.target.value)} placeholder="example.gr" required maxLength={253} autoCapitalize="none" spellCheck={false} /><button disabled={loading} type="submit">{loading ? "Ο έλεγχος εκτελείται…" : "Έναρξη δωρεάν ελέγχου →"}</button></div>
+      <div className="audit-input-row"><input id="audit-domain" value={domain} onChange={e => setDomain(e.target.value)} placeholder="example.gr" required maxLength={253} autoCapitalize="none" spellCheck={false} /><button aria-busy={loading} disabled={loading} type="submit">{loading && <span className="audit-spinner" aria-hidden="true" />}{loading ? "Ο έλεγχος εκτελείται…" : "Έναρξη δωρεάν ελέγχου →"}</button></div>
       <p>Δεν χρειάζεται email. Ο έλεγχος συνδέεται στη δημόσια ιστοσελίδα που καταχωρίζετε.</p>
     </form>
     <div aria-live="polite">{error && <p className="audit-error" role="alert">{error}</p>}{loading && <p className="audit-loading">Εξετάζουμε δημόσιες σελίδες. Αυτό μπορεί να διαρκέσει λίγο.</p>}</div>
