@@ -71,7 +71,7 @@ export default function Score({findings, pages}: {findings:Finding[]; pages:numb
      </div>
     </div>
     <SignalBubble tone="review" label="ΓΙΑ ΕΠΑΝΕΞΕΤΑΣΗ" title="Ευκαιρίες βελτίωσης" items={improvements.slice(0,3)} empty="Δεν επισημάνθηκαν προβλήματα σε αυτούς τους ελέγχους." />
-    <SignalBubble tone="unknown" label="ΕΚΤΟΣ ΑΥΤΟΜΑΤΟΥ ΣΚΟΡ" title="Δεν αξιολογήθηκε" items={unknown.slice(0,2)} empty="Οι συγκεκριμένοι τεχνικοί έλεγχοι επιβεβαιώθηκαν." />
+    <SignalBubble tone="unknown" label="ΕΚΤΟΣ ΑΥΤΟΜΑΤΟΥ ΣΚΟΡ" title="Δεν αξιολογήθηκε" items={unknown.slice(0,2)} empty="Η ποιότητα περιεχομένου, η ευρετηρίαση και η εμφάνιση σε AI δεν αξιολογούνται αυτόματα." />
    </div>
    <div className="readiness-scope">
     <div><span>ΤΙ ΜΕΤΡΑ</span><p>Μέχρι 80 πόντους από επαληθεύσιμους τεχνικούς ελέγχους στις {pages} σελίδες του δείγματος.</p></div>
@@ -87,3 +87,4 @@ export default function Score({findings, pages}: {findings:Finding[]; pages:numb
   </section>
  </>;
 }
+
