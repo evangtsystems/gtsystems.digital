@@ -9,13 +9,18 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default function AiVisibilityPage() {
+  const configuredProviders = [
+    process.env.OPENAI_API_KEY ? "ChatGPT" : null,
+    process.env.ANTHROPIC_API_KEY ? "Claude" : null,
+    process.env.GEMINI_API_KEY ? "Gemini" : null,
+  ].filter((provider): provider is string => Boolean(provider));
   return <main className="visibility-page">
     <section className="visibility-hero">
       <div className="visibility-wrap">
         <p className="visibility-eyebrow"><span /> ΕΛΕΓΧΟΣ ΟΡΑΤΟΤΗΤΑΣ AI</p>
         <h1>Σας προτείνει το AI στην περιοχή σας;</h1>
-        <p className="visibility-intro">Δοκιμάζουμε πέντε σταθερά ερωτήματα για την υπηρεσία και την περιοχή σας και καταγράφουμε την απάντηση, τις πηγές και τις επιχειρήσεις που αναφέρονται.</p>
-        <VisibilityForm configured={Boolean(process.env.GEMINI_API_KEY)} />
+        <p className="visibility-intro">Δοκιμάζουμε πέντε σταθερά ερωτήματα σε ChatGPT και Claude, καθώς και σε όποιον άλλο πάροχο έχει ενεργοποιηθεί, και καταγράφουμε απαντήσεις, πηγές και αναφορές επιχειρήσεων.</p>
+        <VisibilityForm configuredProviders={configuredProviders} />
       </div>
     </section>
     <section className="visibility-explainer">
@@ -28,11 +33,11 @@ export default function AiVisibilityPage() {
         <aside>
           <strong>Τι ελέγχεται</strong>
           <ul>
-            <li>Πέντε ερωτήματα για υπηρεσία και περιοχή</li>
+            <li>Πέντε ερωτήματα ανά ενεργό μοντέλο</li>
             <li>Αναφορά ή μη αναφορά της επιχείρησης στις απαντήσεις</li>
             <li>Απάντηση και διαθέσιμες πηγές για κάθε ερώτημα</li>
           </ul>
-          <p>Δεν είναι έλεγχος ChatGPT, Claude ή Perplexity και δεν δείχνει πραγματικά search analytics ή Google indexing.</p>
+          <p>Οι απαντήσεις προέρχονται από τα επίσημα API των ενεργών παρόχων με αναζήτηση ιστού. Δεν είναι αυτούσιες συνεδρίες στις εφαρμογές ChatGPT ή Claude και δεν δείχνουν search analytics ή Google indexing.</p>
         </aside>
       </div>
     </section>
