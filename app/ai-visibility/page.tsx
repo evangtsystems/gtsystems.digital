@@ -28,7 +28,7 @@ export default function AiVisibilityPage() {
         <aside>
           <strong>Τι ελέγχεται</strong>
           <ul>
-            <li>Ανάγνωση έως έξι δημόσιων σελίδων με Playwright</li>
+            <li>Ανάγνωση έως έξι δημόσιων σελίδων και απόδοση της αρχικής με Playwright</li>
             <li>Πέντε σταθερά ερωτήματα σε κάθε consumer chat</li>
             <li>Καταγραφή απαντήσεων, αναφορών και πηγών</li>
           </ul>
