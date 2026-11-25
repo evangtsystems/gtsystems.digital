@@ -1,32 +1,88 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 
-type Result = { query: string; answer: string; searchQueries: string[]; citations: { title: string; url: string }[]; businessMentioned: boolean; error?: string };
-type ProviderReport = { provider: string; model: string; completed: number; mentions: number; results: Result[] };
-type Report = { name: string; website: string; area: string; service: string; checkedAt: string; providers: ProviderReport[] };
+type Finding = { title: string; status: "found" | "review" | "unknown"; detail: string; evidence?: string; url?: string };
+type SiteReport = { domain: string; checkedAt: string; pages: string[]; skipped: number; robotsStatus: string; findings: Finding[]; rendering: "complete" | "unavailable"; performance: Record<string, number | null> | null; performanceReason: string };
+type Question = { id: string; text: string };
+type Provider = { id: "chatgpt" | "claude"; name: string; url: string; questions: Question[] };
 
-export default function VisibilityForm({ configuredProviders }: { configuredProviders: string[] }) {
-  const configured = configuredProviders.length > 0;
+const providers: Provider[] = [
+  {
+    id: "chatgpt", name: "ChatGPT", url: "https://chatgpt.com/",
+    questions: [
+      { id: "recommend", text: "Χρησιμοποιώντας αναζήτηση ιστού, ποιες επιχειρήσεις προτείνεις για {service} στην περιοχή {area}; Δώσε σύντομη λίστα με πραγματικές επιχειρήσεις και πηγές." },
+      { id: "local", text: "Χρησιμοποιώντας αναζήτηση ιστού, αν κάποιος στην περιοχή {area} χρειάζεται {service}, ποιες τοπικές επιχειρήσεις αξίζει να εξετάσει και γιατί; Παράθεσε πηγές." },
+      { id: "providers", text: "Χρησιμοποιώντας αναζήτηση ιστού, βρες τρεις επιχειρήσεις που παρέχουν {service} και εξυπηρετούν την περιοχή {area}. Προτίμησε επίσημες ή ανεξάρτητες πηγές." },
+      { id: "trusted", text: "Χρησιμοποιώντας αναζήτηση ιστού, ποιοι είναι αξιόπιστοι πάροχοι για {service} στην περιοχή {area}; Ανέφερε στοιχεία που τεκμηριώνουν την απάντηση." },
+      { id: "compare", text: "Χρησιμοποιώντας αναζήτηση ιστού, σύγκρινε επιλογές για {service} στην περιοχή {area}. Ποια επιχείρηση θα πρότεινες και ποιες πηγές στηρίζουν την πρόταση;" },
+    ],
+  },
+  {
+    id: "claude", name: "Claude", url: "https://claude.ai/new",
+    questions: [
+      { id: "recommend", text: "Χρησιμοποίησε αναζήτηση ιστού για να προτείνεις επιχειρήσεις για {service} στην περιοχή {area}. Δώσε σύντομη λίστα με πραγματικές επιχειρήσεις και πηγές." },
+      { id: "local", text: "Με αναζήτηση ιστού, ποιες τοπικές επιχειρήσεις στην περιοχή {area} αξίζει να εξετάσει κάποιος για {service}; Εξήγησε σύντομα και παράθεσε πηγές." },
+      { id: "providers", text: "Βρες μέσω αναζήτησης ιστού τρεις επιχειρήσεις που παρέχουν {service} και εξυπηρετούν την περιοχή {area}. Προτίμησε επίσημες ή ανεξάρτητες πηγές." },
+      { id: "trusted", text: "Ποιοι πάροχοι φαίνονται αξιόπιστοι για {service} στην περιοχή {area}; Αναζήτησε πηγές στον ιστό και τεκμηρίωσε την απάντηση." },
+      { id: "compare", text: "Σύγκρινε επιχειρήσεις για {service} στην περιοχή {area} με βάση πληροφορίες που βρίσκεις στον ιστό. Ποια θα πρότεινες και γιατί; Παράθεσε πηγές." },
+    ],
+  },
+];
+
+function normalized(value: string) {
+  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+}
+
+function extractUrls(value: string) {
+  return [...new Set(value.match(/https?:\/\/[^\s<>{}\[\]"']+/gi) || [])].map((raw) => {
+    const cleaned = raw.replace(/[),.;!?]+$/, "");
+    try { const url = new URL(cleaned); return ["https:", "http:"].includes(url.protocol) ? url.href : ""; } catch { return ""; }
+  }).filter(Boolean).slice(0, 8);
+}
+
+export default function VisibilityForm() {
   const [form, setForm] = useState({ name: "", website: "", service: "", area: "" });
   const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [report, setReport] = useState<Report | null>(null);
+  const [report, setReport] = useState<SiteReport | null>(null);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [copied, setCopied] = useState("");
+
+  const websiteHost = useMemo(() => {
+    try { return new URL(/^https?:\/\//i.test(form.website) ? form.website : `https://${form.website}`).hostname.replace(/^www\./i, ""); } catch { return ""; }
+  }, [form.website]);
+
+  const mentionCount = (provider: Provider) => provider.questions.filter((question) => {
+    const answer = normalized(answers[`${provider.id}-${question.id}`] || "");
+    if (!answer) return false;
+    const name = normalized(form.name);
+    const host = normalized(websiteHost).replace(/\s/g, "");
+    return (!!name && answer.includes(name)) || (!!host && answer.replace(/\s/g, "").includes(host));
+  }).length;
 
   async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setBusy(true); setError(""); setReport(null);
+    event.preventDefault(); setBusy(true); setError(""); setReport(null); setAnswers({});
     try {
-      const response = await fetch("/api/ai-visibility", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(form) });
+      const response = await fetch("/api/ai-readiness", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ domain: form.website }) });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Δεν ήταν δυνατή η ολοκλήρωση του ελέγχου.");
+      if (!response.ok) throw new Error(data.error || "Δεν ήταν δυνατή η ανάγνωση του site.");
       setReport(data);
     } catch (caught) { setError(caught instanceof Error ? caught.message : "Παρουσιάστηκε σφάλμα."); }
     finally { setBusy(false); }
   }
 
+  async function copy(question: string, key: string) {
+    try { await navigator.clipboard.writeText(question); setCopied(key); window.setTimeout(() => setCopied(""), 1800); }
+    catch { setError("Δεν ήταν δυνατή η αντιγραφή. Επιλέξτε και αντιγράψτε το ερώτημα χειροκίνητα."); }
+  }
+
+  function questionFor(template: string) {
+    return template.replaceAll("{service}", form.service.trim()).replaceAll("{area}", form.area.trim());
+  }
+
   return <>
-    {!configured && <div className="visibility-config-note"><strong>Η υπηρεσία δεν έχει ενεργοποιηθεί ακόμη.</strong><span>Απαιτείται τουλάχιστον ένα API key (OpenAI, Anthropic ή Gemini) στο περιβάλλον του server. Δεν ζητάμε ή αποθηκεύουμε κλειδί από τον επισκέπτη.</span></div>}
     <form className="visibility-form" onSubmit={submit}>
       <div className="visibility-fields">
         <label>Όνομα επιχείρησης<input autoComplete="organization" maxLength={100} required value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} placeholder="π.χ. GTSystems" /></label>
@@ -34,15 +90,25 @@ export default function VisibilityForm({ configuredProviders }: { configuredProv
         <label>Υπηρεσία<input maxLength={120} required value={form.service} onChange={(event) => setForm({ ...form, service: event.target.value })} placeholder="π.χ. τεχνική υποστήριξη υπολογιστών" /></label>
         <label>Περιοχή<input maxLength={120} required value={form.area} onChange={(event) => setForm({ ...form, area: event.target.value })} placeholder="π.χ. Κέρκυρα" /></label>
       </div>
-      <label className="visibility-consent"><input type="checkbox" required checked={consent} onChange={(event) => setConsent(event.target.checked)} /><span>Κατανοώ ότι τα ερωτήματα περιλαμβάνουν μόνο υπηρεσία και περιοχή και αποστέλλονται στους ενεργούς παρόχους: {configuredProviders.join(", ")}. Το όνομα και το domain παραμένουν στον server για σύγκριση με τις απαντήσεις. Η χρήση υπόκειται στους όρους και την πολιτική δεδομένων κάθε παρόχου. Δεν θα καταχωρίσω εμπιστευτικές πληροφορίες.</span></label>
-      <button type="submit" disabled={busy || !configured}>{busy && <span className="visibility-spinner" aria-hidden="true" />}{busy ? "Εκτελούνται τα ερωτήματα…" : configured ? "Έναρξη ελέγχου →" : "Απαιτείται ρύθμιση server"}</button>
-      <p className="visibility-form-note">Πέντε προκαθορισμένα ερωτήματα ανά ενεργό AI · αποτελέσματα με διαθέσιμες πηγές</p>
+      <label className="visibility-consent"><input type="checkbox" required checked={consent} onChange={(event) => setConsent(event.target.checked)} /><span>Κατανοώ ότι ο server θα ανοίξει το δημόσιο site για τεχνικό έλεγχο με Playwright. Οι απαντήσεις ChatGPT και Claude θα τις καταχωρίσω εγώ· δεν αποστέλλονται από το εργαλείο στους παρόχους.</span></label>
+      <button type="submit" disabled={busy}>{busy && <span className="visibility-spinner" aria-hidden="true" />}{busy ? "Το Playwright ελέγχει το site…" : "Έλεγχος site και ετοιμασία ερωτημάτων →"}</button>
+      <p className="visibility-form-note">Playwright διαβάζει έως έξι δημόσιες σελίδες · πέντε σταθερά ερωτήματα ανά consumer chat</p>
     </form>
     <div aria-live="polite">{error && <p className="visibility-error" role="alert">{error}</p>}</div>
+
     {report && <section className="visibility-report" aria-labelledby="visibility-report-title">
-      <header className="visibility-report-head"><div><p className="visibility-eyebrow">ΑΠΟΤΕΛΕΣΜΑΤΑ ΣΤΙΓΜΙΟΤΥΠΟΥ</p><h2 id="visibility-report-title">Αναφορές επιχείρησης ανά AI</h2><p>{report.name} · {report.service} · {report.area}</p><p>{new Date(report.checkedAt).toLocaleString("el-GR", { timeZone: "Europe/Athens" })}</p></div></header>
-      <p className="visibility-disclaimer">Κάθε ενότητα αφορά μόνο τα ερωτήματα και το μοντέλο που αναφέρονται, στη συγκεκριμένη χρονική στιγμή. Δεν ισοδυναμεί με θέση κατάταξης ούτε προβλέπει τι θα απαντήσουν άλλες πλατφόρμες.</p>
-      {report.providers.map((provider) => <section className="visibility-provider" key={`${provider.provider}-${provider.model}`}><header className="visibility-provider-head"><div><h3>{provider.provider}</h3><p>{provider.model}</p></div><div className="visibility-count">{provider.mentions}<small>/{provider.completed}</small></div></header><div className="visibility-results">{provider.results.map((result, index) => <article className="visibility-result" key={`${result.query}-${index}`}><div className="visibility-result-title"><span>{String(index + 1).padStart(2, "0")}</span><h3>{result.query}</h3><b className={result.businessMentioned ? "is-mentioned" : result.answer ? "not-mentioned" : "is-unknown"}>{result.error || (result.businessMentioned ? "Αναφέρθηκε" : result.answer ? "Δεν εντοπίστηκε στην απάντηση" : "Δεν ολοκληρώθηκε")}</b></div>{result.answer && <p>{result.answer}</p>}{!!result.searchQueries.length && <details><summary>Ερωτήματα αναζήτησης που εκτελέστηκαν</summary><ul>{result.searchQueries.map((query) => <li key={query}>{query}</li>)}</ul></details>}{!!result.citations.length && <div className="visibility-citations"><strong>Πηγές</strong>{result.citations.map((citation) => <a key={citation.url} href={citation.url} target="_blank" rel="noreferrer">{citation.title} ↗</a>)}</div>}</article>)}</div></section>)}
+      <header className="visibility-report-head"><div><p className="visibility-eyebrow">ΑΝΑΓΝΩΣΗ SITE ΜΕ PLAYWRIGHT</p><h2 id="visibility-report-title">Το site διαβάστηκε. Ώρα για τα consumer chats.</h2><p>{report.domain} · {report.pages.length} σελίδες · {report.rendering === "complete" ? "JavaScript περιεχόμενο αποδόθηκε" : "Δεν ήταν διαθέσιμη η απόδοση JavaScript"}</p><p>{new Date(report.checkedAt).toLocaleString("el-GR", { timeZone: "Europe/Athens" })}</p></div><div className="visibility-count">{report.findings.filter((finding) => finding.status === "review").length}<small>σημεία για έλεγχο</small></div></header>
+      <p className="visibility-disclaimer">Το Playwright διαβάζει το δημόσιο site και εμφανίζει τεχνικά ευρήματα. Για πραγματικές απαντήσεις ChatGPT και Claude, αντέγραψε κάθε ερώτημα στο αντίστοιχο consumer chat, ενεργοποίησε αναζήτηση ιστού όπου είναι διαθέσιμη και επικόλλησε εδώ ολόκληρη την απάντηση. Η αυτόματη ένδειξη αναφοράς ελέγχει την επωνυμία ή το domain· επιβεβαίωσε την κρίση χειροκίνητα.</p>
+
+      <details className="visibility-site-findings"><summary>Τεχνική ανάγνωση site από Playwright · {report.findings.length} ευρήματα</summary><div className="visibility-findings-list">{report.findings.map((finding, index) => <article key={`${finding.title}-${index}`}><div><b className={`finding-${finding.status}`}>{finding.status === "found" ? "Εντοπίστηκε" : finding.status === "review" ? "Για αξιολόγηση" : "Άγνωστο"}</b><h3>{finding.title}</h3></div><p>{finding.detail}</p>{finding.evidence && <small>{finding.evidence}</small>}{finding.url && <a href={finding.url} target="_blank" rel="noreferrer">Σελίδα πηγής ↗</a>}</article>)}</div><p className="visibility-report-note">Οι επισημάνσεις «Για αξιολόγηση» είναι ενδείξεις για ανθρώπινο έλεγχο, όχι αυτόματη απόδειξη σφάλματος.</p></details>
+
+      {providers.map((provider) => <section className="visibility-provider" key={provider.id}><header className="visibility-provider-head"><div><h3>{provider.name}</h3><p>Καταχωρισμένες απαντήσεις: {provider.questions.filter((question) => !!answers[`${provider.id}-${question.id}`]?.trim()).length}/5</p></div><div className="visibility-count">{mentionCount(provider)}<small>/5 αναφορές</small></div></header><p className="visibility-provider-help">Άνοιξε το {provider.name}, αντέγραψε ένα ερώτημα κάθε φορά και επικόλλησε την πλήρη απάντηση στο αντίστοιχο πεδίο.</p><div className="visibility-results">{provider.questions.map((question, index) => {
+        const key = `${provider.id}-${question.id}`;
+        const answer = answers[key] || "";
+        const mentioned = !!answer.trim() && ((!!normalized(form.name) && normalized(answer).includes(normalized(form.name))) || (!!normalized(websiteHost) && normalized(answer).replace(/\s/g, "").includes(normalized(websiteHost).replace(/\s/g, ""))));
+        const urls = extractUrls(answer);
+        return <article className="visibility-result" key={question.id}><div className="visibility-result-title"><span>{String(index + 1).padStart(2, "0")}</span><h3>{questionFor(question.text)}</h3><b className={mentioned ? "is-mentioned" : answer.trim() ? "not-mentioned" : "is-unknown"}>{mentioned ? "Εντοπίστηκε όνομα/domain" : answer.trim() ? "Δεν εντοπίστηκε αυτόματα" : "Αναμονή απάντησης"}</b></div><div className="visibility-question-actions"><button type="button" onClick={() => copy(questionFor(question.text), key)}>{copied === key ? "Αντιγράφηκε ✓" : "Αντιγραφή ερωτήματος"}</button><a href={provider.url} target="_blank" rel="noreferrer">Άνοιγμα {provider.name} ↗</a></div><label className="visibility-answer-label">Επικόλλησε εδώ την απάντηση<textarea rows={5} value={answer} onChange={(event) => setAnswers({ ...answers, [key]: event.target.value })} placeholder="Κάνε επικόλληση ολόκληρης της απάντησης, μαζί με τις πηγές…" /></label>{answer.trim() && <p className="visibility-manual-hint">Έλεγχος αναφοράς με βάση το όνομα ή το domain. Αν χρησιμοποιείται διαφορετική επωνυμία, σημείωσέ το χειροκίνητα κατά την αξιολόγηση.</p>}{urls.length > 0 && <div className="visibility-citations"><strong>Σύνδεσμοι που επικολλήθηκαν</strong>{urls.map((url) => <a key={url} href={url} target="_blank" rel="noreferrer">{new URL(url).hostname} ↗</a>)}</div>}</article>;
+      })}</div></section>)}
     </section>}
   </>;
 }
