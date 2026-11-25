@@ -1,11 +1,12 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 
 type Finding = { title: string; status: "found" | "review" | "unknown"; detail: string; evidence?: string; url?: string };
 type SiteReport = { domain: string; checkedAt: string; pages: string[]; skipped: number; robotsStatus: string; findings: Finding[]; rendering: "complete" | "unavailable"; performance: Record<string, number | null> | null; performanceReason: string };
 type Question = { id: string; text: string };
 type Provider = { id: "chatgpt" | "claude"; name: string; url: string; questions: Question[] };
+const STORAGE_KEY = "gtsystems-ai-visibility-manual-v1";
 
 const providers: Provider[] = [
   {
@@ -49,6 +50,24 @@ export default function VisibilityForm() {
   const [report, setReport] = useState<SiteReport | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [copied, setCopied] = useState("");
+  const [restored, setRestored] = useState(false);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const data = JSON.parse(stored);
+        if (data.form && typeof data.form === "object") setForm(data.form);
+        if (data.report && typeof data.report === "object") setReport(data.report);
+        if (data.answers && typeof data.answers === "object") setAnswers(data.answers);
+      }
+    } catch { localStorage.removeItem(STORAGE_KEY); }
+    setRestored(true);
+  }, []);
+
+  useEffect(() => {
+    if (restored) localStorage.setItem(STORAGE_KEY, JSON.stringify({ form, report, answers }));
+  }, [restored, form, report, answers]);
 
   const websiteHost = useMemo(() => {
     try { return new URL(/^https?:\/\//i.test(form.website) ? form.website : `https://${form.website}`).hostname.replace(/^www\./i, ""); } catch { return ""; }
@@ -82,6 +101,11 @@ export default function VisibilityForm() {
     return template.replaceAll("{service}", form.service.trim()).replaceAll("{area}", form.area.trim());
   }
 
+  function clearSavedReport() {
+    setReport(null); setAnswers({}); setForm({ name: "", website: "", service: "", area: "" }); setError("");
+    localStorage.removeItem(STORAGE_KEY);
+  }
+
   return <>
     <form className="visibility-form" onSubmit={submit}>
       <div className="visibility-fields">
@@ -98,6 +122,7 @@ export default function VisibilityForm() {
 
     {report && <section className="visibility-report" aria-labelledby="visibility-report-title">
       <header className="visibility-report-head"><div><p className="visibility-eyebrow">ΑΝΑΓΝΩΣΗ SITE ΜΕ PLAYWRIGHT</p><h2 id="visibility-report-title">Το site διαβάστηκε. Ώρα για τα consumer chats.</h2><p>{report.domain} · {report.pages.length} σελίδες · {report.rendering === "complete" ? "JavaScript περιεχόμενο αποδόθηκε" : "Δεν ήταν διαθέσιμη η απόδοση JavaScript"}</p><p>{new Date(report.checkedAt).toLocaleString("el-GR", { timeZone: "Europe/Athens" })}</p></div><div className="visibility-count">{report.findings.filter((finding) => finding.status === "review").length}<small>σημεία για έλεγχο</small></div></header>
+      <button className="visibility-clear" type="button" onClick={clearSavedReport}>Καθαρισμός αποθηκευμένου ελέγχου</button>
       <p className="visibility-disclaimer">Ο crawler εξετάζει έως έξι δημόσιες σελίδες και το Playwright αποδίδει την αρχική με JavaScript. Για πραγματικές απαντήσεις ChatGPT και Claude, αντέγραψε κάθε ερώτημα στο αντίστοιχο consumer chat, ενεργοποίησε αναζήτηση ιστού όπου είναι διαθέσιμη και επικόλλησε εδώ ολόκληρη την απάντηση. Η αυτόματη ένδειξη αναφοράς ελέγχει την επωνυμία ή το domain· επιβεβαίωσε την κρίση χειροκίνητα.</p>
 
       <details className="visibility-site-findings"><summary>Τεχνική ανάγνωση site από Playwright · {report.findings.length} ευρήματα</summary><div className="visibility-findings-list">{report.findings.map((finding, index) => <article key={`${finding.title}-${index}`}><div><b className={`finding-${finding.status}`}>{finding.status === "found" ? "Εντοπίστηκε" : finding.status === "review" ? "Για αξιολόγηση" : "Άγνωστο"}</b><h3>{finding.title}</h3></div><p>{finding.detail}</p>{finding.evidence && <small>{finding.evidence}</small>}{finding.url && <a href={finding.url} target="_blank" rel="noreferrer">Σελίδα πηγής ↗</a>}</article>)}</div><p className="visibility-report-note">Οι επισημάνσεις «Για αξιολόγηση» είναι ενδείξεις για ανθρώπινο έλεγχο, όχι αυτόματη απόδειξη σφάλματος.</p></details>
